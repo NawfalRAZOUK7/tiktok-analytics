@@ -26,11 +26,14 @@ TikTok export JSON file (path to be configured later). Example file currently av
 - Statistics endpoint ✅
 - Filtering, search, and pagination ✅
 
-### 2. Browse (Frontend)
+### 2. Browse (Frontend) ✅
 
-- Post list with sort/filter
-- Detail page (cover, title, likes, date)
-- Basic analytics charts (likes/time, engagement ratio)
+- Post list with sort/filter ✅
+- Detail page (cover, title, likes, date) ✅
+- Search functionality ✅
+- Pull-to-refresh ✅
+- Statistics bar with aggregates ✅
+- Infinite scroll pagination ✅
 
 ### 3. Insights
 
