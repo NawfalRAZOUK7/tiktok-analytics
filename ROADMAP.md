@@ -50,13 +50,13 @@ TikTok export JSON file (path to be configured later). Example file currently av
 
 ---
 
-## Backend (Future Tasks)
+## Backend Testing & Commands ✅
 
-- DRF setup; serializers/models for Posts (date, video_link(s), likes, title, cover, flags)
-- Management command to import from TikTok JSON
-- Pagination, filtering (date range, like thresholds)
-- CORS, logging, settings split, .env management
-- Unit and integration tests for API endpoints
+- ✅ DRF setup; serializers/models for Posts (date, video_link(s), likes, title, cover, flags)
+- ✅ Management command to import from TikTok JSON (`import_tiktok_json`)
+- ✅ Pagination, filtering (date range, like thresholds)
+- ✅ CORS, logging, settings split, .env management
+- ✅ Unit and integration tests for API endpoints (105+ tests, 70%+ coverage)
 
 ## Frontend (Future Tasks)
 
