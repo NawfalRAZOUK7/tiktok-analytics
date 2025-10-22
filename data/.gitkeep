@@ -4,28 +4,60 @@ Place your TikTok export JSON files here.
 
 This directory is gitignored to protect your privacy and prevent sensitive data from being committed to version control.
 
-## Expected File Format
+## 📋 Schema Documentation
+
+See **`SCHEMA.md`** for complete documentation including:
+
+- Required and optional fields
+- Validation rules
+- Data formats and constraints
+- Examples and best practices
+
+## 📄 Available Files
+
+- **`schema.json`** — JSON Schema for programmatic validation
+- **`sample.json`** — Example TikTok export with 3 posts
+- **`SCHEMA.md`** — Complete schema documentation
+- **`.gitkeep`** — This file (keeps directory in git)
+
+Your actual TikTok export files (e.g., `tiktok_export.json`) will be gitignored.
+
+## 🚀 Quick Start
+
+1. **Copy the sample** (for testing):
+
+   ```bash
+   cp data/sample.json data/tiktok_export.json
+   ```
+
+2. **Configure backend** `.env` file:
+
+   ```
+   TIKTOK_JSON_IMPORT_PATH=../data/tiktok_export.json
+   ```
+
+3. **Or use your real export** (place it here and update the path)
+
+## 📐 Minimal Required Format
 
 ```json
 {
+  "metadata": {
+    "export_date": "2025-10-22T10:30:00Z",
+    "version": "1.0.0",
+    "total_posts": 1
+  },
   "posts": [
     {
-      "id": "unique_post_id",
-      "title": "Post title/description",
+      "id": "7298765432109876543",
+      "title": "Post description",
       "likes": 1234,
-      "date": "2025-01-15T10:30:00Z",
+      "date": "2025-09-15T14:23:00Z",
       "cover_url": "https://example.com/cover.jpg",
-      "video_link": "https://tiktok.com/@user/video/123"
+      "video_link": "https://www.tiktok.com/@user/video/123"
     }
   ]
 }
 ```
 
-## Usage
-
-1. Export your TikTok data
-2. Place the JSON file(s) in this directory
-3. Configure the path in your backend `.env` file:
-   ```
-   TIKTOK_JSON_IMPORT_PATH=../data/your_export.json
-   ```
+See `SCHEMA.md` for optional fields like views, comments, shares, hashtags, etc.

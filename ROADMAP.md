@@ -14,8 +14,8 @@ TikTok export JSON file (path to be configured later). Example file currently av
 
 - Initialize Django & Flutter scaffolds ✅
 - Configure .env management and README structure ✅
-- Connect repo to GitHub
-- Define sample TikTok JSON schema (fields: id, title, likes, date, cover_url, video_link)
+- Connect repo to GitHub 🔄 (local repo ready, awaiting remote)
+- Define sample TikTok JSON schema (fields: id, title, likes, date, cover_url, video_link) ✅
 
 ### 1. Data Ingest (Backend)
 

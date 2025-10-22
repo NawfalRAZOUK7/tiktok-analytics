@@ -43,3 +43,6 @@ frontend/.packages
 # Data files (TikTok exports)
 data/*.json
 !data/.gitkeep
+# Allow schema documentation files
+!data/schema.json
+!data/sample.json

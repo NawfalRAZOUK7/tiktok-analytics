@@ -1,0 +1,112 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TikTok Analytics Data Schema",
+  "description": "JSON Schema for TikTok export data structure",
+  "type": "object",
+  "required": ["metadata", "posts"],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "description": "Information about the export",
+      "properties": {
+        "export_date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 timestamp of when the data was exported"
+        },
+        "version": {
+          "type": "string",
+          "description": "Schema version for compatibility tracking",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "total_posts": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total number of posts in this export"
+        }
+      },
+      "required": ["export_date", "version", "total_posts"]
+    },
+    "posts": {
+      "type": "array",
+      "description": "Array of TikTok posts",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "likes", "date", "cover_url", "video_link"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the TikTok post",
+            "pattern": "^[0-9]+$",
+            "minLength": 1
+          },
+          "title": {
+            "type": "string",
+            "description": "Post title/caption/description",
+            "maxLength": 2200
+          },
+          "likes": {
+            "type": "integer",
+            "description": "Number of likes on the post",
+            "minimum": 0
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO 8601 timestamp of when the post was created"
+          },
+          "cover_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL to the post's cover/thumbnail image"
+          },
+          "video_link": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL to the TikTok video",
+            "pattern": "^https?://(www\\.)?(tiktok\\.com|vm\\.tiktok\\.com)/.+"
+          },
+          "views": {
+            "type": "integer",
+            "description": "Number of views (optional)",
+            "minimum": 0
+          },
+          "comments": {
+            "type": "integer",
+            "description": "Number of comments (optional)",
+            "minimum": 0
+          },
+          "shares": {
+            "type": "integer",
+            "description": "Number of shares (optional)",
+            "minimum": 0
+          },
+          "duration": {
+            "type": "integer",
+            "description": "Video duration in seconds (optional)",
+            "minimum": 1,
+            "maximum": 600
+          },
+          "hashtags": {
+            "type": "array",
+            "description": "Array of hashtags used in the post (optional)",
+            "items": {
+              "type": "string",
+              "pattern": "^#?\\w+"
+            }
+          },
+          "is_private": {
+            "type": "boolean",
+            "description": "Whether the post is private (optional)",
+            "default": false
+          },
+          "is_pinned": {
+            "type": "boolean",
+            "description": "Whether the post is pinned to profile (optional)",
+            "default": false
+          }
+        }
+      }
+    }
+  }
+}
