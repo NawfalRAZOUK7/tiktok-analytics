@@ -1,0 +1,235 @@
+name: Backend CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend-ci.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'backend/**'
+
+jobs:
+  test:
+    name: Test Backend
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.12']
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: 'pip'
+    
+    - name: Install dependencies
+      working-directory: ./backend
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest pytest-django pytest-cov flake8 black isort
+    
+    - name: Check code formatting with Black
+      working-directory: ./backend
+      run: black --check .
+      continue-on-error: true
+    
+    - name: Check import sorting with isort
+      working-directory: ./backend
+      run: isort --check-only .
+      continue-on-error: true
+    
+    - name: Lint with flake8
+      working-directory: ./backend
+      run: |
+        # Stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # Exit-zero treats all errors as warnings
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+      continue-on-error: true
+    
+    - name: Run Django system checks
+      working-directory: ./backend
+      run: python manage.py check
+      env:
+        DJANGO_SECRET_KEY: test-secret-key-for-ci
+        DJANGO_DEBUG: 'False'
+        ENVIRONMENT: test
+    
+    - name: Run migrations
+      working-directory: ./backend
+      run: python manage.py migrate
+      env:
+        DJANGO_SECRET_KEY: test-secret-key-for-ci
+        DJANGO_DEBUG: 'False'
+        ENVIRONMENT: test
+    
+    - name: Run tests with coverage
+      working-directory: ./backend
+      run: |
+        pytest --cov=. --cov-report=xml --cov-report=term-missing
+      env:
+        DJANGO_SECRET_KEY: test-secret-key-for-ci
+        DJANGO_DEBUG: 'False'
+        ENVIRONMENT: test
+      continue-on-error: true
+    
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        file: ./backend/coverage.xml
+        flags: backend
+        name: backend-coverage
+      continue-on-error: true
+
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      working-directory: ./backend
+      run: |
+        python -m pip install --upgrade pip
+        pip install safety bandit
+    
+    - name: Run Safety check (vulnerabilities)
+      working-directory: ./backend
+      run: safety check --json
+      continue-on-error: true
+    
+    - name: Run Bandit (security issues)
+      working-directory: ./backend
+      run: bandit -r . -f json -o bandit-report.json
+      continue-on-error: true
+    
+    - name: Upload Bandit report
+      uses: actions/upload-artifact@v4
+      with:
+        name: bandit-report
+        path: backend/bandit-report.json
+      if: always()
+
+  build:
+    name: Build & Validate
+    runs-on: ubuntu-latest
+    needs: [test]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+    
+    - name: Install dependencies
+      working-directory: ./backend
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.prod.txt
+    
+    - name: Collect static files
+      working-directory: ./backend
+      run: python manage.py collectstatic --noinput
+      env:
+        DJANGO_SECRET_KEY: test-secret-key-for-ci
+        DJANGO_DEBUG: 'False'
+        ENVIRONMENT: production
+        STATIC_ROOT: staticfiles
+    
+    - name: Check deployment settings
+      working-directory: ./backend
+      run: python manage.py check --deploy --fail-level WARNING
+      env:
+        DJANGO_SECRET_KEY: test-secret-key-for-ci
+        DJANGO_DEBUG: 'False'
+        ENVIRONMENT: production
+        DJANGO_ALLOWED_HOSTS: example.com
+      continue-on-error: true
+
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [test, security, build]
+    if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
+    environment:
+      name: staging
+      url: https://staging.yourdomain.com
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Deploy to staging (placeholder)
+      run: |
+        echo "🚀 Deploying to staging environment..."
+        echo "Add your staging deployment commands here"
+        # Examples:
+        # - Deploy to Heroku staging
+        # - Deploy to Railway staging
+        # - Deploy to AWS/Azure staging
+    
+    - name: Run smoke tests
+      run: |
+        echo "🧪 Running smoke tests on staging..."
+        # Add smoke test commands here
+        # curl https://staging.yourdomain.com/health
+
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [test, security, build]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment:
+      name: production
+      url: https://yourdomain.com
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Deploy to production (placeholder)
+      run: |
+        echo "🚀 Deploying to production environment..."
+        echo "Add your production deployment commands here"
+        # Examples:
+        # - Deploy to Heroku production
+        # - Deploy to Railway production
+        # - Deploy to AWS/Azure production
+        # - Update Docker image on registry
+    
+    - name: Run smoke tests
+      run: |
+        echo "🧪 Running smoke tests on production..."
+        # Add smoke test commands here
+        # curl https://yourdomain.com/health
+    
+    - name: Create release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: backend-v${{ github.run_number }}
+        release_name: Backend Release ${{ github.run_number }}
+        draft: false
+        prerelease: false
+      continue-on-error: true

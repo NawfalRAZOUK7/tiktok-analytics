@@ -16,7 +16,7 @@ void main() {
   if (Environment.isDevelopment) {
     Environment.printConfig();
   }
-  
+
   runApp(const MyApp());
 }
 

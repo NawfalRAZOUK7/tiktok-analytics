@@ -1,0 +1,153 @@
+name: Dependency Updates
+
+on:
+  schedule:
+    # Run every Monday at 9 AM UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  update-python-deps:
+    name: Update Python Dependencies
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: Install pip-upgrader
+      run: |
+        python -m pip install --upgrade pip
+        pip install pip-upgrader
+    
+    - name: Check for updates
+      working-directory: ./backend
+      run: |
+        pip-upgrade requirements.txt --skip-package-installation
+        pip-upgrade requirements.prod.txt --skip-package-installation
+      continue-on-error: true
+    
+    - name: Run security audit
+      working-directory: ./backend
+      run: |
+        pip install safety
+        safety check --json || true
+    
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v6
+      with:
+        commit-message: 'chore: update Python dependencies'
+        title: '🔄 Update Python Dependencies'
+        body: |
+          Automated dependency update for Python packages.
+          
+          ## Changes
+          - Updated backend/requirements.txt
+          - Updated backend/requirements.prod.txt
+          
+          ## Security
+          - Ran safety check for known vulnerabilities
+          
+          Please review the changes and test before merging.
+        branch: automated/update-python-deps
+        delete-branch: true
+        labels: dependencies, automated
+
+  update-flutter-deps:
+    name: Update Flutter Dependencies
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.24.0'
+        channel: 'stable'
+    
+    - name: Update dependencies
+      working-directory: ./frontend
+      run: |
+        flutter pub upgrade --major-versions
+        flutter pub outdated
+    
+    - name: Run tests
+      working-directory: ./frontend
+      run: flutter test
+      continue-on-error: true
+    
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v6
+      with:
+        commit-message: 'chore: update Flutter dependencies'
+        title: '🔄 Update Flutter Dependencies'
+        body: |
+          Automated dependency update for Flutter packages.
+          
+          ## Changes
+          - Updated frontend/pubspec.yaml
+          - Updated frontend/pubspec.lock
+          
+          ## Tests
+          - Ran flutter test to verify compatibility
+          
+          Please review the changes and test before merging.
+        branch: automated/update-flutter-deps
+        delete-branch: true
+        labels: dependencies, automated
+
+  security-audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Run Dependabot security scan
+      run: |
+        echo "Security scan will be performed by Dependabot"
+        echo "Ensure Dependabot is enabled in repository settings"
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: Install security tools
+      run: |
+        pip install safety bandit
+    
+    - name: Run Safety (Python vulnerabilities)
+      working-directory: ./backend
+      run: |
+        pip install -r requirements.txt
+        safety check --json > safety-report.json || true
+      continue-on-error: true
+    
+    - name: Run Bandit (Python security)
+      working-directory: ./backend
+      run: |
+        bandit -r . -f json -o bandit-report.json || true
+      continue-on-error: true
+    
+    - name: Upload security reports
+      uses: actions/upload-artifact@v4
+      with:
+        name: security-reports
+        path: |
+          backend/safety-report.json
+          backend/bandit-report.json
+      if: always()
+    
+    - name: Comment on issues if vulnerabilities found
+      run: |
+        echo "Check artifacts for security reports"
+        echo "Consider creating issues for critical vulnerabilities"

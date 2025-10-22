@@ -1,0 +1,47 @@
+# Auto-label pull requests based on files changed
+
+backend:
+  - backend/**/*
+  - requirements*.txt
+  - Procfile
+  - Dockerfile
+
+frontend:
+  - frontend/**/*
+  - pubspec.yaml
+  - pubspec.lock
+
+documentation:
+  - '**/*.md'
+  - docs/**/*
+
+ci-cd:
+  - .github/workflows/**/*
+  - .github/actions/**/*
+
+docker:
+  - Dockerfile
+  - docker-compose.yml
+  - .dockerignore
+
+dependencies:
+  - requirements.txt
+  - requirements.prod.txt
+  - pubspec.yaml
+  - pubspec.lock
+
+configuration:
+  - '**/.env*'
+  - '**/config/**/*'
+  - settings.py
+  - '**/*.config.js'
+
+tests:
+  - '**/test/**/*'
+  - '**/tests/**/*'
+  - '**/*_test.dart'
+  - '**/test_*.py'
+
+security:
+  - '**/security/**/*'
+  - '**/auth/**/*'

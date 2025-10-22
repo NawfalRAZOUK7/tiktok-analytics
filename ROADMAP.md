@@ -46,7 +46,7 @@ TikTok export JSON file (path to be configured later). Example file currently av
 
 - Simple auth ✅
 - Environment configs ✅
-- CI/CD
+- CI/CD ✅
 
 ---
 

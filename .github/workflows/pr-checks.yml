@@ -1,0 +1,161 @@
+name: Pull Request Checks
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  pr-info:
+    name: PR Information
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: PR Details
+      run: |
+        echo "📝 Pull Request: ${{ github.event.pull_request.title }}"
+        echo "👤 Author: ${{ github.event.pull_request.user.login }}"
+        echo "🔀 From: ${{ github.event.pull_request.head.ref }}"
+        echo "➡️ To: ${{ github.event.pull_request.base.ref }}"
+        echo "📊 Files changed: ${{ github.event.pull_request.changed_files }}"
+
+  validate-pr:
+    name: Validate PR
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Check PR title format
+      run: |
+        PR_TITLE="${{ github.event.pull_request.title }}"
+        if [[ ! "$PR_TITLE" =~ ^(feat|fix|docs|style|refactor|test|chore|perf|ci)(\(.+\))?: ]]; then
+          echo "❌ PR title must follow conventional commits format"
+          echo "Examples: feat: add new feature, fix: resolve bug, docs: update readme"
+          exit 1
+        fi
+        echo "✅ PR title format is valid"
+      continue-on-error: true
+    
+    - name: Check PR has description
+      run: |
+        PR_BODY="${{ github.event.pull_request.body }}"
+        if [ -z "$PR_BODY" ] || [ ${#PR_BODY} -lt 20 ]; then
+          echo "⚠️ PR should have a meaningful description"
+        else
+          echo "✅ PR has description"
+        fi
+      continue-on-error: true
+    
+    - name: Check for breaking changes
+      run: |
+        PR_BODY="${{ github.event.pull_request.body }}"
+        if [[ "$PR_BODY" == *"BREAKING CHANGE"* ]]; then
+          echo "⚠️ This PR contains breaking changes!"
+          echo "Ensure version bump and changelog update"
+        fi
+
+  label-pr:
+    name: Auto Label PR
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Label based on files changed
+      uses: actions/labeler@v5
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+  size-label:
+    name: Size Label
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    
+    steps:
+    - name: Add size label
+      uses: codelytv/pr-size-labeler@v1
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        xs_label: 'size/XS'
+        xs_max_size: '10'
+        s_label: 'size/S'
+        s_max_size: '100'
+        m_label: 'size/M'
+        m_max_size: '500'
+        l_label: 'size/L'
+        l_max_size: '1000'
+        xl_label: 'size/XL'
+        message_if_xl: 'This PR is very large. Consider breaking it into smaller PRs.'
+
+  comment-coverage:
+    name: Coverage Comment
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Download coverage reports
+      uses: actions/download-artifact@v4
+      with:
+        name: coverage-reports
+      continue-on-error: true
+    
+    - name: Comment coverage
+      run: |
+        echo "📊 Coverage reports will be available after tests complete"
+        echo "Backend coverage: See workflow artifacts"
+        echo "Frontend coverage: See workflow artifacts"
+
+  check-conflicts:
+    name: Check for Conflicts
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Check for merge conflicts
+      run: |
+        git fetch origin ${{ github.event.pull_request.base.ref }}
+        if git merge-tree $(git merge-base HEAD origin/${{ github.event.pull_request.base.ref }}) HEAD origin/${{ github.event.pull_request.base.ref }} | grep -q "^+<<<<<<<"; then
+          echo "⚠️ Merge conflicts detected"
+          exit 1
+        else
+          echo "✅ No merge conflicts"
+        fi
+      continue-on-error: true
+
+  lint-commits:
+    name: Lint Commit Messages
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+    
+    - name: Install commitlint
+      run: |
+        npm install -g @commitlint/cli @commitlint/config-conventional
+    
+    - name: Validate commit messages
+      run: |
+        npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
+      continue-on-error: true

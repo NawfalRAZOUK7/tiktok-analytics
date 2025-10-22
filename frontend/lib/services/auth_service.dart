@@ -1,6 +1,8 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
+
 import '../config/environment.dart';
 import '../models/user.dart';
 
@@ -8,15 +10,13 @@ class AuthService {
   final String baseUrl;
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
   final Duration timeout;
-  
+
   static const String _tokenKey = 'auth_token';
   static const String _userKey = 'user_data';
 
-  AuthService({
-    String? baseUrl,
-    Duration? timeout,
-  })  : baseUrl = baseUrl ?? Environment.apiBaseUrl,
-        timeout = timeout ?? Duration(seconds: Environment.apiTimeout);
+  AuthService({String? baseUrl, Duration? timeout})
+    : baseUrl = baseUrl ?? Environment.apiBaseUrl,
+      timeout = timeout ?? Duration(seconds: Environment.apiTimeout);
 
   /// Register a new user
   Future<AuthResponse> register(RegisterRequest request) async {
@@ -32,10 +32,10 @@ class AuthService {
       if (response.statusCode == 201) {
         final data = json.decode(response.body) as Map<String, dynamic>;
         final authResponse = AuthResponse.fromJson(data);
-        
+
         // Save token and user data
         await _saveAuthData(authResponse.token, authResponse.user);
-        
+
         return authResponse;
       } else {
         final error = json.decode(response.body);
@@ -60,10 +60,10 @@ class AuthService {
       if (response.statusCode == 200) {
         final data = json.decode(response.body) as Map<String, dynamic>;
         final authResponse = AuthResponse.fromJson(data);
-        
+
         // Save token and user data
         await _saveAuthData(authResponse.token, authResponse.user);
-        
+
         return authResponse;
       } else {
         final error = json.decode(response.body);
@@ -77,10 +77,10 @@ class AuthService {
   /// Logout user
   Future<void> logout() async {
     final token = await getToken();
-    
+
     if (token != null) {
       final uri = Uri.parse('$baseUrl/auth/logout/');
-      
+
       try {
         await http.post(
           uri,
@@ -93,7 +93,7 @@ class AuthService {
         // Continue with local logout even if API call fails
       }
     }
-    
+
     // Clear local storage
     await clearAuthData();
   }
@@ -101,7 +101,7 @@ class AuthService {
   /// Get user profile
   Future<User> getProfile() async {
     final token = await getToken();
-    
+
     if (token == null) {
       throw Exception('Not authenticated');
     }
@@ -120,10 +120,10 @@ class AuthService {
       if (response.statusCode == 200) {
         final data = json.decode(response.body) as Map<String, dynamic>;
         final user = User.fromJson(data);
-        
+
         // Update stored user data
         await _storage.write(key: _userKey, value: json.encode(user.toJson()));
-        
+
         return user;
       } else {
         throw Exception('Failed to get profile');
@@ -136,7 +136,7 @@ class AuthService {
   /// Change password
   Future<void> changePassword(ChangePasswordRequest request) async {
     final token = await getToken();
-    
+
     if (token == null) {
       throw Exception('Not authenticated');
     }
@@ -171,7 +171,7 @@ class AuthService {
   Future<User?> getStoredUser() async {
     final userJson = await _storage.read(key: _userKey);
     if (userJson == null) return null;
-    
+
     try {
       final userData = json.decode(userJson) as Map<String, dynamic>;
       return User.fromJson(userData);

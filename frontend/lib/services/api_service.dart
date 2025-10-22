@@ -12,13 +12,10 @@ class ApiService {
   final AuthService? _authService;
   final Duration timeout;
 
-  ApiService({
-    String? baseUrl,
-    AuthService? authService,
-    Duration? timeout,
-  })  : baseUrl = baseUrl ?? Environment.apiBaseUrl,
-        _authService = authService ?? AuthService(),
-        timeout = timeout ?? Duration(seconds: Environment.apiTimeout);
+  ApiService({String? baseUrl, AuthService? authService, Duration? timeout})
+    : baseUrl = baseUrl ?? Environment.apiBaseUrl,
+      _authService = authService ?? AuthService(),
+      timeout = timeout ?? Duration(seconds: Environment.apiTimeout);
 
   /// Get headers with auth token if available
   Future<Map<String, String>> _getHeaders() async {

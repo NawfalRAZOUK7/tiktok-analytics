@@ -1,5 +1,10 @@
 # TikTok Analytics — Full-Stack Application
 
+[![Backend CI/CD](https://github.com/YOUR_USERNAME/SocialMedia/actions/workflows/backend-ci.yml/badge.svg)](https://github.com/YOUR_USERNAME/SocialMedia/actions/workflows/backend-ci.yml)
+[![Frontend CI/CD](https://github.com/YOUR_USERNAME/SocialMedia/actions/workflows/frontend-ci.yml/badge.svg)](https://github.com/YOUR_USERNAME/SocialMedia/actions/workflows/frontend-ci.yml)
+[![Docker Build](https://github.com/YOUR_USERNAME/SocialMedia/actions/workflows/docker-build.yml/badge.svg)](https://github.com/YOUR_USERNAME/SocialMedia/actions/workflows/docker-build.yml)
+[![codecov](https://codecov.io/gh/YOUR_USERNAME/SocialMedia/branch/main/graph/badge.svg)](https://codecov.io/gh/YOUR_USERNAME/SocialMedia)
+
 A full-stack application for importing and analyzing TikTok post metrics, built with Django (backend) and Flutter (frontend).
 
 ## 🎯 Project Overview
