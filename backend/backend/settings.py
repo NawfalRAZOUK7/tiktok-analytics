@@ -40,10 +40,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Third-party apps
     'rest_framework',
+    'rest_framework.authtoken',  # For token authentication
     'corsheaders',
     'django_filters',
     # Local apps
     'posts',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -147,6 +149,13 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PARSER_CLASSES': [
         'rest_framework.parsers.JSONParser',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],
     'DATETIME_FORMAT': '%Y-%m-%dT%H:%M:%SZ',
     'DATETIME_INPUT_FORMATS': ['%Y-%m-%dT%H:%M:%SZ', 'iso-8601'],

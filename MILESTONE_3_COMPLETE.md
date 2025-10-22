@@ -19,6 +19,7 @@ Milestone 3 implements a comprehensive analytics and insights dashboard with fou
 All endpoints added to `backend/posts/views.py` as `@action` methods in `PostViewSet`:
 
 #### 1. **Trends Endpoint** - `/api/posts/trends/`
+
 - **Method:** GET
 - **Parameters:**
   - `grouping` (day/week/month) - default: 'day'
@@ -39,6 +40,7 @@ All endpoints added to `backend/posts/views.py` as `@action` methods in `PostVie
   ```
 
 #### 2. **Top Posts by Time** - `/api/posts/top_posts_by_time/`
+
 - **Method:** GET
 - **Parameters:**
   - `window` (daily/weekly/monthly) - default: 'daily'
@@ -51,6 +53,7 @@ All endpoints added to `backend/posts/views.py` as `@action` methods in `PostVie
 - **Tested:** Successfully returns posts grouped by month with rankings
 
 #### 3. **Keyword Frequency** - `/api/posts/keyword_frequency/`
+
 - **Method:** GET
 - **Parameters:**
   - `limit` (int) - default: 20
@@ -63,6 +66,7 @@ All endpoints added to `backend/posts/views.py` as `@action` methods in `PostVie
 - **Tested:** Returns 17 unique keywords from sample data with percentages
 
 #### 4. **Engagement Ratio** - `/api/posts/engagement_ratio_analysis/`
+
 - **Method:** GET
 - **Parameters:**
   - `limit` (int) - default: 10
@@ -74,6 +78,7 @@ All endpoints added to `backend/posts/views.py` as `@action` methods in `PostVie
 - **Tested:** Returns posts with metrics (474.22, 272.73, 161.16 eng/day)
 
 ### Files Modified/Created
+
 - ✅ `backend/posts/views.py` - Added ~230 lines with 4 analytics methods
 - ✅ `backend/posts/analytics.py` - Created (redundant, not used in production)
 
@@ -82,18 +87,21 @@ All endpoints added to `backend/posts/views.py` as `@action` methods in `PostVie
 ## Frontend Implementation
 
 ### New Models (`frontend/lib/models/analytics.dart`)
+
 - `TrendsResponse` & `TrendData` - Time-series trend data
 - `TopPostsByTimeResponse` & `TopPostsByTime` - Top posts by time window
 - `KeywordFrequencyResponse` & `KeywordData` - Keyword analysis
 - `EngagementRatioResponse` & `EngagementRatioPost` - Engagement metrics
 
 ### API Service Updates (`frontend/lib/services/api_service.dart`)
+
 - ✅ `fetchTrends(grouping, days)` - Fetch trends data
 - ✅ `fetchTopPostsByTime(window, limit, metric)` - Fetch top posts
 - ✅ `fetchKeywordFrequency(limit, minLength)` - Fetch keywords
 - ✅ `fetchEngagementRatio(limit)` - Fetch engagement data
 
 ### State Management (`frontend/lib/providers/analytics_provider.dart`)
+
 - Manages loading states for all 4 analytics types
 - Error handling for each endpoint
 - `fetchAllAnalytics()` - Loads all data at once
@@ -102,6 +110,7 @@ All endpoints added to `backend/posts/views.py` as `@action` methods in `PostVie
 ### UI Components
 
 #### Analytics Dashboard (`frontend/lib/screens/analytics_dashboard_screen.dart`)
+
 - Tab-based layout with 4 sections
 - Refresh button to reload data
 - Error handling with retry functionality
@@ -111,6 +120,7 @@ All endpoints added to `backend/posts/views.py` as `@action` methods in `PostVie
 #### Chart Widgets
 
 1. **Trends Chart** (`frontend/lib/widgets/trends_chart.dart`)
+
    - Line chart using `fl_chart`
    - Toggle between likes/views
    - Interactive tooltips
@@ -118,12 +128,14 @@ All endpoints added to `backend/posts/views.py` as `@action` methods in `PostVie
    - Date formatting on X-axis
 
 2. **Keyword Chart** (`frontend/lib/widgets/keyword_chart.dart`)
+
    - Bar chart for top keywords
    - Progress bars for percentages
    - Summary stats (total/unique words)
    - Top 15 keywords displayed
 
 3. **Top Posts Widget** (`frontend/lib/widgets/top_posts_widget.dart`)
+
    - Expandable lists by time period
    - Ranked posts with medals (#1 gold, #2 silver, #3 bronze)
    - Likes, views, and date display
@@ -136,12 +148,14 @@ All endpoints added to `backend/posts/views.py` as `@action` methods in `PostVie
    - Engagement rate and likes per day
 
 ### Navigation Updates (`frontend/lib/main.dart`)
+
 - ✅ Updated to `MultiProvider` for both post and analytics providers
 - ✅ Added `MainScreen` with bottom navigation bar
 - ✅ Two tabs: "Posts" and "Analytics"
 - ✅ Material 3 design with NavigationBar
 
 ### Dependencies Added
+
 - ✅ `fl_chart: ^0.69.0` - Chart library for visualizations
 
 ---
@@ -149,13 +163,16 @@ All endpoints added to `backend/posts/views.py` as `@action` methods in `PostVie
 ## Testing Results
 
 ### Backend Endpoints ✅
+
 All 4 endpoints tested with curl:
+
 - ✅ `/api/posts/trends/` - Returns empty array (no posts in last 30 days)
 - ✅ `/api/posts/top_posts_by_time/` - Returns 3 posts grouped by month
 - ✅ `/api/posts/keyword_frequency/` - Returns 17 unique keywords
 - ✅ `/api/posts/engagement_ratio_analysis/` - Returns 3 posts with engagement metrics
 
 ### Frontend ✅
+
 - ✅ No compilation errors in all analytics files
 - ✅ Models properly deserialize JSON responses
 - ✅ Provider state management working
@@ -167,23 +184,27 @@ All 4 endpoints tested with curl:
 ## Key Features Delivered
 
 ### ✅ Trend Detection
+
 - Views/likes over time with configurable grouping (day/week/month)
 - Time-series visualization with line charts
 - Summary statistics
 
 ### ✅ Top Posts Analysis
+
 - Time window selection (daily/weekly/monthly)
 - Metric selection (likes/views/engagement)
 - Ranked lists with medals
 - Period-based grouping
 
 ### ✅ Keyword Frequency
+
 - Word frequency analysis from titles
 - Stopword filtering
 - Bar chart visualization
 - Percentage calculations
 
 ### ✅ Engagement Ratio
+
 - Engagement per day since post date
 - Likes per day calculation
 - Sorted by engagement rate
@@ -194,10 +215,12 @@ All 4 endpoints tested with curl:
 ## File Summary
 
 ### Backend Files
+
 - `backend/posts/views.py` - 4 new analytics endpoints (~230 lines)
 - `backend/posts/analytics.py` - Standalone analytics class (not integrated)
 
 ### Frontend Files
+
 - `frontend/lib/models/analytics.dart` - Analytics data models
 - `frontend/lib/services/api_service.dart` - API methods for analytics
 - `frontend/lib/providers/analytics_provider.dart` - State management
@@ -210,6 +233,7 @@ All 4 endpoints tested with curl:
 - `frontend/pubspec.yaml` - Added fl_chart dependency
 
 ### Documentation
+
 - `ROADMAP.md` - Updated with Milestone 3 checkmarks
 - `MILESTONE_3_COMPLETE.md` - This document
 
@@ -229,6 +253,7 @@ All 4 endpoints tested with curl:
 ## Next Steps
 
 ### Milestone 4: Auth & Deploy
+
 - Simple authentication system
 - Environment configuration management
 - CI/CD pipeline setup

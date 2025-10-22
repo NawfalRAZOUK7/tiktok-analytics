@@ -4,11 +4,32 @@ import 'package:http/http.dart' as http;
 
 import '../models/analytics.dart';
 import '../models/post.dart';
+import 'auth_service.dart';
 
 class ApiService {
   final String baseUrl;
+  final AuthService? _authService;
 
-  ApiService({this.baseUrl = 'http://127.0.0.1:8000/api'});
+  ApiService({
+    this.baseUrl = 'http://127.0.0.1:8000/api',
+    AuthService? authService,
+  }) : _authService = authService ?? AuthService();
+
+  /// Get headers with auth token if available
+  Future<Map<String, String>> _getHeaders() async {
+    final headers = <String, String>{
+      'Content-Type': 'application/json',
+    };
+
+    if (_authService != null) {
+      final token = await _authService.getToken();
+      if (token != null) {
+        headers['Authorization'] = 'Token $token';
+      }
+    }
+
+    return headers;
+  }
 
   /// Fetch paginated list of posts with optional filters
   Future<PostListResponse> fetchPosts({
@@ -50,7 +71,8 @@ class ApiService {
     ).replace(queryParameters: queryParams);
 
     try {
-      final response = await http.get(uri);
+      final headers = await _getHeaders();
+      final response = await http.get(uri, headers: headers);
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body) as Map<String, dynamic>;
@@ -68,7 +90,8 @@ class ApiService {
     final uri = Uri.parse('$baseUrl/posts/$id/');
 
     try {
-      final response = await http.get(uri);
+      final headers = await _getHeaders();
+      final response = await http.get(uri, headers: headers);
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body) as Map<String, dynamic>;
@@ -88,7 +111,8 @@ class ApiService {
     final uri = Uri.parse('$baseUrl/posts/stats/');
 
     try {
-      final response = await http.get(uri);
+      final headers = await _getHeaders();
+      final response = await http.get(uri, headers: headers);
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body) as Map<String, dynamic>;
@@ -108,9 +132,10 @@ class ApiService {
     final uri = Uri.parse('$baseUrl/posts/import/');
 
     try {
+      final headers = await _getHeaders();
       final response = await http.post(
         uri,
-        headers: {'Content-Type': 'application/json'},
+        headers: headers,
         body: json.encode(jsonData),
       );
 
@@ -139,7 +164,8 @@ class ApiService {
     ).replace(queryParameters: queryParams);
 
     try {
-      final response = await http.get(uri);
+      final headers = await _getHeaders();
+      final response = await http.get(uri, headers: headers);
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body) as Map<String, dynamic>;
@@ -169,7 +195,8 @@ class ApiService {
     ).replace(queryParameters: queryParams);
 
     try {
-      final response = await http.get(uri);
+      final headers = await _getHeaders();
+      final response = await http.get(uri, headers: headers);
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body) as Map<String, dynamic>;
@@ -197,7 +224,8 @@ class ApiService {
     ).replace(queryParameters: queryParams);
 
     try {
-      final response = await http.get(uri);
+      final headers = await _getHeaders();
+      final response = await http.get(uri, headers: headers);
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body) as Map<String, dynamic>;
@@ -219,7 +247,8 @@ class ApiService {
     ).replace(queryParameters: queryParams);
 
     try {
-      final response = await http.get(uri);
+      final headers = await _getHeaders();
+      final response = await http.get(uri, headers: headers);
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body) as Map<String, dynamic>;

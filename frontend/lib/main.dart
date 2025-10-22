@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'providers/analytics_provider.dart';
+import 'providers/auth_provider.dart';
 import 'providers/post_provider.dart';
 import 'screens/analytics_dashboard_screen.dart';
+import 'screens/login_screen.dart';
 import 'screens/post_list_screen.dart';
 import 'services/api_service.dart';
+import 'services/auth_service.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,9 +20,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final apiService = ApiService();
+    final authService = AuthService();
 
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (context) => AuthProvider(authService)),
         ChangeNotifierProvider(create: (context) => PostProvider()),
         ChangeNotifierProvider(
           create: (context) => AnalyticsProvider(apiService),
@@ -42,7 +47,14 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        home: const MainScreen(),
+        home: Consumer<AuthProvider>(
+          builder: (context, authProvider, child) {
+            if (authProvider.isAuthenticated) {
+              return const MainScreen();
+            }
+            return const LoginScreen();
+          },
+        ),
       ),
     );
   }
@@ -66,6 +78,19 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('TikTok Analytics'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              final authProvider = context.read<AuthProvider>();
+              await authProvider.logout();
+            },
+            tooltip: 'Logout',
+          ),
+        ],
+      ),
       body: _screens[_selectedIndex],
       bottomNavigationBar: NavigationBar(
         selectedIndex: _selectedIndex,
