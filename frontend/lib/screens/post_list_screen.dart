@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:go_router/go_router.dart';
 import '../models/post.dart';
 import '../providers/post_provider.dart';
-import 'post_detail_screen.dart';
 
 class PostListScreen extends StatefulWidget {
   const PostListScreen({super.key});
@@ -231,12 +231,7 @@ class _PostListScreenState extends State<PostListScreen> {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: InkWell(
         onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => PostDetailScreen(post: post),
-            ),
-          );
+          context.go('/posts/${post.id}', extra: post);
         },
         child: Padding(
           padding: const EdgeInsets.all(12),

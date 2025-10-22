@@ -105,6 +105,45 @@ class Post {
     }
     return likes.toString();
   }
+
+  /// Create a copy of this Post with modified fields
+  Post copyWith({
+    int? id,
+    String? postId,
+    String? title,
+    int? likes,
+    DateTime? date,
+    String? coverUrl,
+    String? videoLink,
+    int? views,
+    int? comments,
+    int? shares,
+    int? duration,
+    List<String>? hashtags,
+    bool? isPrivate,
+    bool? isPinned,
+    double? engagementRatio,
+    int? totalEngagement,
+  }) {
+    return Post(
+      id: id ?? this.id,
+      postId: postId ?? this.postId,
+      title: title ?? this.title,
+      likes: likes ?? this.likes,
+      date: date ?? this.date,
+      coverUrl: coverUrl ?? this.coverUrl,
+      videoLink: videoLink ?? this.videoLink,
+      views: views ?? this.views,
+      comments: comments ?? this.comments,
+      shares: shares ?? this.shares,
+      duration: duration ?? this.duration,
+      hashtags: hashtags ?? this.hashtags,
+      isPrivate: isPrivate ?? this.isPrivate,
+      isPinned: isPinned ?? this.isPinned,
+      engagementRatio: engagementRatio ?? this.engagementRatio,
+      totalEngagement: totalEngagement ?? this.totalEngagement,
+    );
+  }
 }
 
 /// Paginated response from backend

@@ -58,13 +58,17 @@ TikTok export JSON file (path to be configured later). Example file currently av
 - ✅ CORS, logging, settings split, .env management
 - ✅ Unit and integration tests for API endpoints (105+ tests, 70%+ coverage)
 
-## Frontend (Future Tasks)
+## Frontend Enhancement ✅
 
-- Routing + screens (Dashboard, Posts, Post Detail)
-- API client, error states, pull-to-refresh
-- Charts (engagement over time, top content)
-- Responsive layout for web/desktop/mobile
-- Widget tests for key components
+- ✅ Go Router setup with auth guards and deep linking
+- ✅ Screens: Dashboard, Posts List, Post Detail, Login, Register
+- ✅ API client with error handling and loading states
+- ✅ Pull-to-refresh and infinite scroll pagination
+- ✅ Interactive charts with fl_chart (engagement, trends, keywords)
+- ✅ Responsive layout utilities for mobile/tablet/desktop
+- ✅ Widget tests for PostDetailScreen
+- ✅ State management with Provider (Auth, Posts, Analytics)
+- ✅ Comprehensive documentation (FRONTEND_GUIDE.md)
 
 ---
 
