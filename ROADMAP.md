@@ -17,11 +17,14 @@ TikTok export JSON file (path to be configured later). Example file currently av
 - Connect repo to GitHub ✅
 - Define sample TikTok JSON schema (fields: id, title, likes, date, cover_url, video_link) ✅
 
-### 1. Data Ingest (Backend)
+### 1. Data Ingest (Backend) ✅
 
-- Add DRF; endpoints to upload/read TikTok JSON
-- Validate schema; normalize posts
-- Basic list endpoint
+- Add DRF; endpoints to upload/read TikTok JSON ✅
+- Validate schema; normalize posts ✅
+- Basic list endpoint ✅
+- Import endpoint with JSON schema validation ✅
+- Statistics endpoint ✅
+- Filtering, search, and pagination ✅
 
 ### 2. Browse (Frontend)
 

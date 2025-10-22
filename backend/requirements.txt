@@ -1,0 +1,19 @@
+# TikTok Analytics - Backend Requirements
+
+# Django & DRF
+Django>=4.2,<5.0
+djangorestframework>=3.14.0
+django-cors-headers>=4.3.0
+django-filter>=23.5
+
+# Environment Management
+python-decouple>=3.8
+
+# JSON Schema Validation
+jsonschema>=4.20.0
+
+# Database (PostgreSQL support for production)
+psycopg2-binary>=2.9.9
+
+# Utilities
+python-dateutil>=2.8.2
