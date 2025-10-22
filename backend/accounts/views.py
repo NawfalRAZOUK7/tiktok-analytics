@@ -61,7 +61,7 @@ class LoginView(APIView):
             )
         
         # Get or create token
-        token, created = Token.objects.get_or_create(user=user)
+        token, _ = Token.objects.get_or_create(user=user)
         
         return Response({
             'user': UserSerializer(user).data,

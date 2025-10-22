@@ -68,6 +68,34 @@ class AnalyticsViewSet:
         
         return Response(result)
 
+    def _get_period_annotation(self, window):
+        """Helper to get period annotation based on window type"""
+        annotations = {
+            'daily': TruncDate('date'),
+            'monthly': TruncMonth('date'),
+            'weekly': TruncWeek('date')
+        }
+        return annotations.get(window, TruncWeek('date'))
+    
+    def _get_days_for_window(self, window):
+        """Helper to get number of days for a window"""
+        days_map = {'daily': 1, 'weekly': 7, 'monthly': 30}
+        return days_map.get(window, 7)
+    
+    def _sort_posts_by_metric(self, posts, metric, limit):
+        """Helper to sort posts by metric"""
+        if metric == 'views':
+            return posts.order_by('-views')[:limit]
+        elif metric == 'engagement':
+            posts_list = list(posts)
+            posts_list.sort(
+                key=lambda p: (p.likes + (p.comments or 0) + (p.shares or 0)),
+                reverse=True
+            )
+            return posts_list[:limit]
+        else:
+            return posts.order_by('-likes')[:limit]
+
     @action(detail=False, methods=['get'])
     def top_posts_by_time(self, request):
         """
@@ -81,39 +109,21 @@ class AnalyticsViewSet:
         limit = int(request.query_params.get('limit', 5))
         metric = request.query_params.get('metric', 'likes')
         
-        # Determine grouping
-        if window == 'daily':
-            posts = Post.objects.annotate(period=TruncDate('date'))
-        elif window == 'monthly':
-            posts = Post.objects.annotate(period=TruncMonth('date'))
-        else:  # weekly
-            posts = Post.objects.annotate(period=TruncWeek('date'))
-        
-        # Get all unique periods
+        # Annotate posts with period
+        posts = Post.objects.annotate(period=self._get_period_annotation(window))
         periods = posts.values_list('period', flat=True).distinct().order_by('-period')
         
         result = []
-        for period in periods[:10]:  # Last 10 periods
+        days_delta = self._get_days_for_window(window)
+        
+        for period in periods[:10]:
             period_posts = Post.objects.filter(
                 date__gte=period,
-                date__lt=period + timedelta(days=1 if window == 'daily' else 7 if window == 'weekly' else 30)
+                date__lt=period + timedelta(days=days_delta)
             )
             
-            # Order by metric
-            if metric == 'views':
-                period_posts = period_posts.order_by('-views')
-            elif metric == 'engagement':
-                # Calculate engagement as likes + comments + shares
-                period_posts = list(period_posts)
-                period_posts.sort(key=lambda p: (p.likes + (p.comments or 0) + (p.shares or 0)), reverse=True)
-                period_posts = period_posts[:limit]
-            else:  # likes
-                period_posts = period_posts.order_by('-likes')[:limit]
-            
-            if isinstance(period_posts, list):
-                serialized_posts = PostSerializer(period_posts, many=True).data
-            else:
-                serialized_posts = PostSerializer(period_posts[:limit], many=True).data
+            sorted_posts = self._sort_posts_by_metric(period_posts, metric, limit)
+            serialized_posts = PostSerializer(sorted_posts, many=True).data
             
             result.append({
                 'period': period.isoformat() if period else None,

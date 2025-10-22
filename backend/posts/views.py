@@ -221,6 +221,45 @@ class PostViewSet(viewsets.ReadOnlyModelViewSet):
         
         return Response(result)
 
+    def _get_period_annotation(self, window):
+        """Helper to get period annotation based on window type"""
+        from django.db.models.functions import TruncDate, TruncWeek, TruncMonth
+        
+        annotations = {
+            'daily': TruncDate('date'),
+            'monthly': TruncMonth('date'),
+            'weekly': TruncWeek('date')
+        }
+        return annotations.get(window, TruncWeek('date'))
+    
+    def _get_days_delta(self, window):
+        """Helper to get number of days for a window"""
+        days_map = {'daily': 1, 'weekly': 7, 'monthly': 30}
+        return days_map.get(window, 7)
+    
+    def _get_period_label(self, period, window):
+        """Helper to format period label"""
+        if window == 'daily':
+            return period.strftime('%b %d, %Y')
+        elif window == 'weekly':
+            return f"Week of {period.strftime('%b %d, %Y')}"
+        else:
+            return period.strftime('%B %Y')
+    
+    def _sort_posts_by_metric(self, posts, metric, limit):
+        """Helper to sort posts by metric"""
+        if metric == 'views':
+            return posts.order_by('-views')[:limit]
+        elif metric == 'engagement':
+            posts_list = list(posts)
+            posts_list.sort(
+                key=lambda p: (p.likes + (p.comments or 0) + (p.shares or 0)),
+                reverse=True
+            )
+            return posts_list[:limit]
+        else:
+            return posts.order_by('-likes')[:limit]
+
     @action(detail=False, methods=['get'])
     def top_posts_by_time(self, request):
         """
@@ -232,48 +271,31 @@ class PostViewSet(viewsets.ReadOnlyModelViewSet):
         - limit: number of top posts per window (default: 5)
         - metric: likes, views, engagement (default: likes)
         """
-        from django.db.models.functions import TruncDate, TruncWeek, TruncMonth
-        from datetime import datetime, timedelta
+        from datetime import timedelta
         
         window = request.query_params.get('window', 'weekly')
         limit = int(request.query_params.get('limit', 5))
         metric = request.query_params.get('metric', 'likes')
         
-        if window == 'daily':
-            posts = Post.objects.annotate(period=TruncDate('date'))
-        elif window == 'monthly':
-            posts = Post.objects.annotate(period=TruncMonth('date'))
-        else:
-            posts = Post.objects.annotate(period=TruncWeek('date'))
-        
+        # Annotate posts with period
+        posts = Post.objects.annotate(period=self._get_period_annotation(window))
         periods = posts.values_list('period', flat=True).distinct().order_by('-period')
         
         result = []
+        days_delta = self._get_days_delta(window)
+        
         for period in periods[:10]:
-            days_to_add = 1 if window == 'daily' else 7 if window == 'weekly' else 30
             period_posts = Post.objects.filter(
                 date__gte=period,
-                date__lt=period + timedelta(days=days_to_add)
+                date__lt=period + timedelta(days=days_delta)
             )
             
-            if metric == 'views':
-                period_posts = period_posts.order_by('-views')[:limit]
-            elif metric == 'engagement':
-                period_posts = list(period_posts)
-                period_posts.sort(key=lambda p: (p.likes + (p.comments or 0) + (p.shares or 0)), reverse=True)
-                period_posts = period_posts[:limit]
-            else:
-                period_posts = period_posts.order_by('-likes')[:limit]
-            
-            serialized_posts = PostSerializer(period_posts, many=True).data
-            
-            period_label = period.strftime('%b %d, %Y') if window == 'daily' else \
-                          f"Week of {period.strftime('%b %d, %Y')}" if window == 'weekly' else \
-                          period.strftime('%B %Y')
+            sorted_posts = self._sort_posts_by_metric(period_posts, metric, limit)
+            serialized_posts = PostSerializer(sorted_posts, many=True).data
             
             result.append({
                 'period': period.isoformat() if period else None,
-                'period_label': period_label,
+                'period_label': self._get_period_label(period, window),
                 'top_posts': serialized_posts
             })
         

@@ -10,11 +10,11 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 # Set work directory
 WORKDIR /app
 
-# Install system dependencies
+# Install system dependencies, copy requirements, and install Python dependencies
 RUN apt-get update && apt-get install -y \
-    postgresql-client \
     build-essential \
     libpq-dev \
+    postgresql-client \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements
@@ -27,11 +27,9 @@ RUN pip install --upgrade pip && \
 # Copy project
 COPY backend/ .
 
-# Create necessary directories
-RUN mkdir -p staticfiles media logs
-
-# Collect static files
-RUN python manage.py collectstatic --noinput || true
+# Create necessary directories and collect static files
+RUN mkdir -p staticfiles media logs && \
+    python manage.py collectstatic --noinput || true
 
 # Create non-root user
 RUN useradd -m -u 1000 django && \

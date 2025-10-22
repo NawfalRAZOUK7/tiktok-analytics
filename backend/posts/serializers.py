@@ -77,7 +77,7 @@ class PostImportSerializer(serializers.Serializer):
         post_id = validated_data.pop('id')
         
         # Create or update post
-        post, created = Post.objects.update_or_create(
+        post, _ = Post.objects.update_or_create(
             post_id=post_id,
             defaults={
                 'title': validated_data.get('title', ''),
