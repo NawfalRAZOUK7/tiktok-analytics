@@ -1,6 +1,7 @@
 # 🧪 Quick Testing Guide - Authentication System
 
 ## Prerequisites
+
 - Django backend running on `http://127.0.0.1:8000`
 - Flutter app ready to run
 
@@ -9,6 +10,7 @@
 ### ✅ Scenario 1: New User Registration
 
 1. **Launch Flutter App**
+
    ```bash
    cd frontend
    flutter run
@@ -19,6 +21,7 @@
 3. **Tap "Create an account"** → Navigates to RegisterScreen
 
 4. **Fill the form**:
+
    - Username: `testuser123`
    - Email: `test@example.com`
    - First Name: `John` (optional)
@@ -38,6 +41,7 @@
 ### ✅ Scenario 2: User Login
 
 1. **On LoginScreen**, enter:
+
    - Username: `testuser123`
    - Password: `SecurePass123`
 
@@ -53,10 +57,12 @@
 ### ✅ Scenario 3: API Calls with Token
 
 1. **On MainScreen**, navigate to different tabs:
+
    - **Posts Tab**: API calls include `Authorization: Token <token>`
    - **Analytics Tab**: All analytics endpoints include token
 
 2. **Check Network Logs** (optional):
+
    ```bash
    # In backend terminal, you'll see:
    # "GET /api/posts/ HTTP/1.1" 200
@@ -93,6 +99,7 @@
 ### ✅ Scenario 6: Invalid Login
 
 1. **On LoginScreen**, enter:
+
    - Username: `wronguser`
    - Password: `wrongpass`
 
@@ -108,10 +115,12 @@
 ### ✅ Scenario 7: Form Validation
 
 **LoginScreen**:
+
 1. Try submitting with empty fields → ❌ "Please enter username"
 2. Enter only username → ❌ "Please enter password"
 
 **RegisterScreen**:
+
 1. Username < 3 chars → ❌ "Username must be at least 3 characters"
 2. Invalid email → ❌ "Please enter a valid email"
 3. Password < 8 chars → ❌ "Password must be at least 8 characters"
@@ -122,6 +131,7 @@
 ## 🔍 Backend Verification
 
 ### Check User in Database
+
 ```bash
 cd backend
 source venv/bin/activate
@@ -178,7 +188,9 @@ curl -X POST http://127.0.0.1:8000/api/auth/logout/ \
 ## 🐛 Troubleshooting
 
 ### Issue: "Connection refused"
+
 **Solution**: Make sure Django server is running
+
 ```bash
 cd backend
 source venv/bin/activate
@@ -186,24 +198,32 @@ python manage.py runserver
 ```
 
 ### Issue: "Invalid token" / 401 Unauthorized
+
 **Solution**: Token might be expired or deleted
+
 - Try logging out and logging back in
 - Check token exists in database
 
 ### Issue: Flutter app shows blank screen
+
 **Solution**: Check console for errors
+
 ```bash
 # In terminal running Flutter
 flutter logs
 ```
 
 ### Issue: Registration fails with "duplicate key"
+
 **Solution**: Username or email already exists
+
 - Use a different username
 - Check existing users in Django admin
 
 ### Issue: Token not persisting across restarts
+
 **Solution**: Check flutter_secure_storage is installed
+
 ```bash
 cd frontend
 flutter pub get
@@ -213,16 +233,16 @@ flutter pub get
 
 ## 📊 Expected Test Results Summary
 
-| Test | Expected Outcome | Status |
-|------|------------------|--------|
-| Register new user | User created, token saved | ✅ |
-| Login with correct credentials | Token retrieved, navigate to MainScreen | ✅ |
-| Login with wrong credentials | Error message, stay on LoginScreen | ✅ |
-| API calls while authenticated | All succeed with token | ✅ |
-| App restart while authenticated | Auto-login, skip LoginScreen | ✅ |
-| Logout | Token deleted, back to LoginScreen | ✅ |
-| Access app without token | Show LoginScreen | ✅ |
-| Form validation | Errors for invalid input | ✅ |
+| Test                            | Expected Outcome                        | Status |
+| ------------------------------- | --------------------------------------- | ------ |
+| Register new user               | User created, token saved               | ✅     |
+| Login with correct credentials  | Token retrieved, navigate to MainScreen | ✅     |
+| Login with wrong credentials    | Error message, stay on LoginScreen      | ✅     |
+| API calls while authenticated   | All succeed with token                  | ✅     |
+| App restart while authenticated | Auto-login, skip LoginScreen            | ✅     |
+| Logout                          | Token deleted, back to LoginScreen      | ✅     |
+| Access app without token        | Show LoginScreen                        | ✅     |
+| Form validation                 | Errors for invalid input                | ✅     |
 
 ---
 

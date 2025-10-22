@@ -1,0 +1,38 @@
+# Production Requirements
+# Install with: pip install -r requirements.prod.txt
+
+# Core Django
+Django==4.2.25
+djangorestframework==3.16.1
+django-cors-headers==4.7.0
+django-filter==25.0
+
+# Authentication
+djangorestframework-authtoken
+
+# Environment Management
+python-decouple==3.8
+
+# Database (Production)
+psycopg2-binary==2.9.10  # PostgreSQL adapter
+
+# Production Server
+gunicorn==23.0.0
+whitenoise==6.10.2  # Static file serving
+
+# Date/Time parsing
+python-dateutil==2.9.0
+
+# JSON Schema Validation
+jsonschema==4.23.0
+
+# Security
+django-ratelimit==4.1.0  # API rate limiting (optional)
+
+# Monitoring & Logging (optional)
+# sentry-sdk==2.18.0  # Error tracking
+# django-debug-toolbar==4.4.6  # Debug tools (dev only)
+
+# AWS S3 (optional - for static/media files)
+# boto3==1.35.91
+# django-storages==1.14.4

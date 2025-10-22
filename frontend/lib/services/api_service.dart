@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
+import '../config/environment.dart';
 import '../models/analytics.dart';
 import '../models/post.dart';
 import 'auth_service.dart';
@@ -9,17 +10,19 @@ import 'auth_service.dart';
 class ApiService {
   final String baseUrl;
   final AuthService? _authService;
+  final Duration timeout;
 
   ApiService({
-    this.baseUrl = 'http://127.0.0.1:8000/api',
+    String? baseUrl,
     AuthService? authService,
-  }) : _authService = authService ?? AuthService();
+    Duration? timeout,
+  })  : baseUrl = baseUrl ?? Environment.apiBaseUrl,
+        _authService = authService ?? AuthService(),
+        timeout = timeout ?? Duration(seconds: Environment.apiTimeout);
 
   /// Get headers with auth token if available
   Future<Map<String, String>> _getHeaders() async {
-    final headers = <String, String>{
-      'Content-Type': 'application/json',
-    };
+    final headers = <String, String>{'Content-Type': 'application/json'};
 
     if (_authService != null) {
       final token = await _authService.getToken();

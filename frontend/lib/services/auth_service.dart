@@ -1,16 +1,22 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import '../config/environment.dart';
 import '../models/user.dart';
 
 class AuthService {
   final String baseUrl;
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  final Duration timeout;
   
   static const String _tokenKey = 'auth_token';
   static const String _userKey = 'user_data';
 
-  AuthService({this.baseUrl = 'http://127.0.0.1:8000/api'});
+  AuthService({
+    String? baseUrl,
+    Duration? timeout,
+  })  : baseUrl = baseUrl ?? Environment.apiBaseUrl,
+        timeout = timeout ?? Duration(seconds: Environment.apiTimeout);
 
   /// Register a new user
   Future<AuthResponse> register(RegisterRequest request) async {

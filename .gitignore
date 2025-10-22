@@ -2,6 +2,13 @@
 .env
 .env.local
 .env.*.local
+.env.production
+*.secret
+
+# Allow environment templates
+!.env.example
+!.env.development
+!.env.production.example
 
 # Python / Django
 __pycache__/

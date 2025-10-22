@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'config/environment.dart';
 import 'providers/analytics_provider.dart';
 import 'providers/auth_provider.dart';
 import 'providers/post_provider.dart';
@@ -11,6 +12,11 @@ import 'services/api_service.dart';
 import 'services/auth_service.dart';
 
 void main() {
+  // Print environment configuration in development
+  if (Environment.isDevelopment) {
+    Environment.printConfig();
+  }
+  
   runApp(const MyApp());
 }
 
