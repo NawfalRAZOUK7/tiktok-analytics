@@ -9,6 +9,7 @@
 ## What Was Built
 
 ### 📱 Flutter Multi-Platform App
+
 - **Clean architecture** with separation of concerns
 - **Provider state management** for reactive UI
 - **HTTP client** for backend API integration
@@ -34,6 +35,7 @@ lib/
 ### 📊 Features Implemented
 
 #### Post List Screen
+
 - ✅ **Search functionality** - Real-time search across title, post_id, hashtags
 - ✅ **Sorting options** - 6 sort modes (newest/oldest, most/least liked/viewed)
 - ✅ **Filtering** - By likes, views, date ranges
@@ -45,6 +47,7 @@ lib/
 - ✅ **Loading states** - Spinners for initial load and pagination
 
 #### Post Detail Screen
+
 - ✅ **Hero image** - Full-width cover image
 - ✅ **Complete metrics** - Likes, views, comments, shares, duration
 - ✅ **Engagement calculations** - Engagement ratio and total engagement
@@ -55,6 +58,7 @@ lib/
 - ✅ **Date formatting** - Human-readable dates
 
 #### State Management (PostProvider)
+
 - ✅ **Centralized state** - All posts, filters, loading states
 - ✅ **Reactive updates** - UI rebuilds on state changes
 - ✅ **Filter management** - Search, sort, likes, views, dates, flags
@@ -68,6 +72,7 @@ lib/
 ## 📡 API Integration
 
 ### Backend Endpoints Used
+
 ```dart
 GET /api/posts/            // List posts with filters
 GET /api/posts/{id}/       // Single post details
@@ -75,6 +80,7 @@ GET /api/posts/stats/      // Aggregate statistics
 ```
 
 ### Query Parameters Supported
+
 - `page`, `page_size` - Pagination (20 per page default)
 - `ordering` - Sort field with `-` prefix for descending
 - `search` - Text search across multiple fields
@@ -88,6 +94,7 @@ GET /api/posts/stats/      // Aggregate statistics
 ## 🎨 UI/UX Features
 
 ### Visual Design
+
 - **Material Design 3** with blue color scheme
 - **Card-based layout** with rounded corners and shadows
 - **Icon-based metrics** (heart for likes, eye for views)
@@ -96,6 +103,7 @@ GET /api/posts/stats/      // Aggregate statistics
 - **Clean typography** with hierarchy
 
 ### User Interactions
+
 - **Tap to view details** - Navigate to detail screen
 - **Pull to refresh** - Reload entire list
 - **Scroll to load more** - Infinite pagination
@@ -105,6 +113,7 @@ GET /api/posts/stats/      // Aggregate statistics
 - **Clear filters** - One-tap filter reset
 
 ### Loading States
+
 - **Initial load spinner** - Center screen
 - **Pagination spinner** - At bottom of list
 - **Image placeholders** - While images load
@@ -115,10 +124,12 @@ GET /api/posts/stats/      // Aggregate statistics
 ## 🛠️ Tech Stack
 
 ### Core Flutter
+
 - **Flutter 3.9.2** - UI framework
 - **Dart 3.x** - Programming language
 
 ### Dependencies
+
 - **http 1.2.0** - REST API client
 - **provider 6.1.1** - State management
 - **intl 0.19.0** - Date formatting and localization
@@ -131,6 +142,7 @@ GET /api/posts/stats/      // Aggregate statistics
 ## 📊 Data Models
 
 ### Post Model
+
 ```dart
 class Post {
   final int id;
@@ -149,7 +161,7 @@ class Post {
   final bool isPinned;
   final double? engagementRatio;
   final int? totalEngagement;
-  
+
   // Helper methods
   String get formattedDuration;
   String get formattedViews;
@@ -158,6 +170,7 @@ class Post {
 ```
 
 ### PostListResponse
+
 ```dart
 class PostListResponse {
   final int count;
@@ -168,6 +181,7 @@ class PostListResponse {
 ```
 
 ### PostStats
+
 ```dart
 class PostStats {
   final int totalPosts;
@@ -207,6 +221,7 @@ class PostStats {
 ## 🎯 What's Next: Milestone 3 - Visualization
 
 Ready to add analytics charts:
+
 - Engagement over time line chart
 - Top posts by time window
 - Keyword frequency analysis
@@ -220,6 +235,7 @@ Ready to add analytics charts:
 ### For New Developers
 
 1. **Clone and setup:**
+
    ```bash
    git clone git@github.com:NawfalRAZOUK7/tiktok-analytics.git
    cd tiktok-analytics/frontend
@@ -227,6 +243,7 @@ Ready to add analytics charts:
    ```
 
 2. **Start backend:**
+
    ```bash
    cd ../backend
    source venv/bin/activate
@@ -234,6 +251,7 @@ Ready to add analytics charts:
    ```
 
 3. **Run Flutter app:**
+
    ```bash
    cd ../frontend
    flutter run -d chrome
@@ -263,6 +281,7 @@ Ready to add analytics charts:
 ## 🖼️ UI Highlights
 
 ### Post List Screen
+
 - Clean, card-based layout
 - Thumbnail images with fallback
 - Metrics at a glance (likes, views)
@@ -273,6 +292,7 @@ Ready to add analytics charts:
 - Pull-to-refresh gesture
 
 ### Post Detail Screen
+
 - Full-width cover image
 - Large title display
 - Icon-based metrics
@@ -332,6 +352,7 @@ Ready to add analytics charts:
 ## 💡 Technical Highlights
 
 ### State Management Pattern
+
 ```dart
 // Provider at root
 ChangeNotifierProvider(
@@ -351,6 +372,7 @@ context.read<PostProvider>().fetchPosts();
 ```
 
 ### API Service Pattern
+
 ```dart
 // Generic, reusable HTTP client
 final response = await http.get(uri);
@@ -359,6 +381,7 @@ return Post.fromJson(data);
 ```
 
 ### Navigation
+
 ```dart
 Navigator.push(
   context,

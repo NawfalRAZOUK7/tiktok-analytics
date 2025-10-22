@@ -1,5 +1,8 @@
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
+
+import '../models/analytics.dart';
 import '../models/post.dart';
 
 class ApiService {
@@ -42,7 +45,9 @@ class ApiService {
     if (isPrivate != null) queryParams['is_private'] = isPrivate.toString();
     if (isPinned != null) queryParams['is_pinned'] = isPinned.toString();
 
-    final uri = Uri.parse('$baseUrl/posts/').replace(queryParameters: queryParams);
+    final uri = Uri.parse(
+      '$baseUrl/posts/',
+    ).replace(queryParameters: queryParams);
 
     try {
       final response = await http.get(uri);
@@ -97,7 +102,9 @@ class ApiService {
   }
 
   /// Import posts from JSON
-  Future<Map<String, dynamic>> importPosts(Map<String, dynamic> jsonData) async {
+  Future<Map<String, dynamic>> importPosts(
+    Map<String, dynamic> jsonData,
+  ) async {
     final uri = Uri.parse('$baseUrl/posts/import/');
 
     try {
@@ -112,6 +119,115 @@ class ApiService {
       } else {
         final error = json.decode(response.body);
         throw Exception('Import failed: $error');
+      }
+    } catch (e) {
+      throw Exception('Network error: $e');
+    }
+  }
+
+  // ========== Analytics Endpoints ==========
+
+  /// Fetch trends (views/likes over time)
+  Future<TrendsResponse> fetchTrends({
+    String grouping = 'day',
+    int days = 30,
+  }) async {
+    final queryParams = {'grouping': grouping, 'days': days.toString()};
+
+    final uri = Uri.parse(
+      '$baseUrl/posts/trends/',
+    ).replace(queryParameters: queryParams);
+
+    try {
+      final response = await http.get(uri);
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body) as Map<String, dynamic>;
+        return TrendsResponse.fromJson(data);
+      } else {
+        throw Exception('Failed to load trends: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Network error: $e');
+    }
+  }
+
+  /// Fetch top posts by time window
+  Future<TopPostsByTimeResponse> fetchTopPostsByTime({
+    String window = 'daily',
+    int limit = 5,
+    String metric = 'likes',
+  }) async {
+    final queryParams = {
+      'window': window,
+      'limit': limit.toString(),
+      'metric': metric,
+    };
+
+    final uri = Uri.parse(
+      '$baseUrl/posts/top_posts_by_time/',
+    ).replace(queryParameters: queryParams);
+
+    try {
+      final response = await http.get(uri);
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body) as Map<String, dynamic>;
+        return TopPostsByTimeResponse.fromJson(data);
+      } else {
+        throw Exception('Failed to load top posts: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Network error: $e');
+    }
+  }
+
+  /// Fetch keyword frequency analysis
+  Future<KeywordFrequencyResponse> fetchKeywordFrequency({
+    int limit = 20,
+    int minLength = 3,
+  }) async {
+    final queryParams = {
+      'limit': limit.toString(),
+      'min_length': minLength.toString(),
+    };
+
+    final uri = Uri.parse(
+      '$baseUrl/posts/keyword_frequency/',
+    ).replace(queryParameters: queryParams);
+
+    try {
+      final response = await http.get(uri);
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body) as Map<String, dynamic>;
+        return KeywordFrequencyResponse.fromJson(data);
+      } else {
+        throw Exception('Failed to load keywords: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Network error: $e');
+    }
+  }
+
+  /// Fetch engagement ratio analysis
+  Future<EngagementRatioResponse> fetchEngagementRatio({int limit = 10}) async {
+    final queryParams = {'limit': limit.toString()};
+
+    final uri = Uri.parse(
+      '$baseUrl/posts/engagement_ratio_analysis/',
+    ).replace(queryParameters: queryParams);
+
+    try {
+      final response = await http.get(uri);
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body) as Map<String, dynamic>;
+        return EngagementRatioResponse.fromJson(data);
+      } else {
+        throw Exception(
+          'Failed to load engagement data: ${response.statusCode}',
+        );
       }
     } catch (e) {
       throw Exception('Network error: $e');

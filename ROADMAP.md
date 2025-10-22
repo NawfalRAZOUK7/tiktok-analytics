@@ -35,12 +35,12 @@ TikTok export JSON file (path to be configured later). Example file currently av
 - Statistics bar with aggregates ✅
 - Infinite scroll pagination ✅
 
-### 3. Insights
+### 3. Insights ✅
 
-- Trend detection (views/likes over time)
-- Top posts by time window (daily, weekly, monthly)
-- Keyword frequency (common words in titles/descriptions)
-- Engagement ratio (likes per day since post date)
+- Trend detection (views/likes over time) ✅
+- Top posts by time window (daily, weekly, monthly) ✅
+- Keyword frequency (common words in titles/descriptions) ✅
+- Engagement ratio (likes per day since post date) ✅
 
 ### 4. Auth & Deploy
 

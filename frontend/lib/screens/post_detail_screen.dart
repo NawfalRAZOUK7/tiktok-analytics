@@ -1,7 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import '../models/post.dart';
 
 class PostDetailScreen extends StatelessWidget {
@@ -36,14 +37,14 @@ class PostDetailScreen extends StatelessWidget {
                 width: double.infinity,
                 height: 300,
                 fit: BoxFit.cover,
-                placeholder: (context, url) =>
-                    Container(
+                placeholder:
+                    (context, url) => Container(
                       height: 300,
                       color: Colors.grey.shade300,
                       child: const Center(child: CircularProgressIndicator()),
                     ),
-                errorWidget: (context, url, error) =>
-                    Container(
+                errorWidget:
+                    (context, url, error) => Container(
                       height: 300,
                       color: Colors.grey.shade300,
                       child: const Icon(Icons.image_not_supported, size: 64),
@@ -53,9 +54,7 @@ class PostDetailScreen extends StatelessWidget {
               Container(
                 height: 300,
                 color: Colors.grey.shade300,
-                child: const Center(
-                  child: Icon(Icons.video_library, size: 64),
-                ),
+                child: const Center(child: Icon(Icons.video_library, size: 64)),
               ),
 
             Padding(
@@ -184,12 +183,15 @@ class PostDetailScreen extends StatelessWidget {
                     Wrap(
                       spacing: 8,
                       runSpacing: 8,
-                      children: post.hashtags
-                          .map((tag) => Chip(
-                                label: Text('#$tag'),
-                                backgroundColor: Colors.grey.shade200,
-                              ))
-                          .toList(),
+                      children:
+                          post.hashtags
+                              .map(
+                                (tag) => Chip(
+                                  label: Text('#$tag'),
+                                  backgroundColor: Colors.grey.shade200,
+                                ),
+                              )
+                              .toList(),
                     ),
                     const SizedBox(height: 16),
                   ],
@@ -197,10 +199,7 @@ class PostDetailScreen extends StatelessWidget {
                   // Metadata
                   const Text(
                     'Information',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
                   Card(
@@ -209,7 +208,10 @@ class PostDetailScreen extends StatelessWidget {
                       child: Column(
                         children: [
                           _buildInfoRow('Post ID', post.postId),
-                          _buildInfoRow('Published', dateFormat.format(post.date)),
+                          _buildInfoRow(
+                            'Published',
+                            dateFormat.format(post.date),
+                          ),
                           if (post.videoLink != null)
                             _buildLinkRow(
                               'Video Link',
@@ -239,18 +241,10 @@ class PostDetailScreen extends StatelessWidget {
       children: [
         Icon(icon, color: iconColor, size: 24),
         const SizedBox(width: 12),
-        Expanded(
-          child: Text(
-            label,
-            style: const TextStyle(fontSize: 16),
-          ),
-        ),
+        Expanded(child: Text(label, style: const TextStyle(fontSize: 16))),
         Text(
           value,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ],
     );
@@ -264,18 +258,12 @@ class PostDetailScreen extends StatelessWidget {
         children: [
           Text(
             label,
-            style: TextStyle(
-              color: Colors.grey.shade600,
-              fontSize: 14,
-            ),
+            style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
           ),
           Flexible(
             child: Text(
               value,
-              style: const TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 14,
-              ),
+              style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
               textAlign: TextAlign.right,
             ),
           ),
@@ -292,10 +280,7 @@ class PostDetailScreen extends StatelessWidget {
         children: [
           Text(
             label,
-            style: TextStyle(
-              color: Colors.grey.shade600,
-              fontSize: 14,
-            ),
+            style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
           ),
           TextButton(
             onPressed: () => _launchUrl(url),
