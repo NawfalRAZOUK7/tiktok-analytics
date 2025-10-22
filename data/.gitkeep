@@ -1,0 +1,31 @@
+# Data Directory
+
+Place your TikTok export JSON files here.
+
+This directory is gitignored to protect your privacy and prevent sensitive data from being committed to version control.
+
+## Expected File Format
+
+```json
+{
+  "posts": [
+    {
+      "id": "unique_post_id",
+      "title": "Post title/description",
+      "likes": 1234,
+      "date": "2025-01-15T10:30:00Z",
+      "cover_url": "https://example.com/cover.jpg",
+      "video_link": "https://tiktok.com/@user/video/123"
+    }
+  ]
+}
+```
+
+## Usage
+
+1. Export your TikTok data
+2. Place the JSON file(s) in this directory
+3. Configure the path in your backend `.env` file:
+   ```
+   TIKTOK_JSON_IMPORT_PATH=../data/your_export.json
+   ```
