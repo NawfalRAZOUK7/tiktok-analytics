@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:frontend/widgets/follower_card.dart';
 import 'package:frontend/models/follower.dart';
+import 'package:frontend/widgets/follower_card.dart';
 import 'package:intl/intl.dart';
 
 void main() {
@@ -21,7 +21,9 @@ void main() {
       expect(find.text('@test_user'), findsOneWidget);
     });
 
-    testWidgets('displays avatar with first letter', (WidgetTester tester) async {
+    testWidgets('displays avatar with first letter', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -36,7 +38,9 @@ void main() {
       expect(find.text('T'), findsOneWidget);
     });
 
-    testWidgets('displays mutual badge when isMutual is true', (WidgetTester tester) async {
+    testWidgets('displays mutual badge when isMutual is true', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -53,7 +57,9 @@ void main() {
       expect(find.byIcon(Icons.people), findsOneWidget);
     });
 
-    testWidgets('does not display mutual badge when isMutual is false', (WidgetTester tester) async {
+    testWidgets('does not display mutual badge when isMutual is false', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -69,17 +75,16 @@ void main() {
       expect(find.text('Mutual'), findsNothing);
     });
 
-    testWidgets('displays dateFollowed when provided', (WidgetTester tester) async {
+    testWidgets('displays dateFollowed when provided', (
+      WidgetTester tester,
+    ) async {
       final date = DateTime(2024, 1, 15);
       final formattedDate = DateFormat('MMM d, yyyy').format(date);
 
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: FollowerCard(
-              username: 'test_user',
-              dateFollowed: date,
-            ),
+            body: FollowerCard(username: 'test_user', dateFollowed: date),
           ),
         ),
       );
@@ -87,17 +92,16 @@ void main() {
       expect(find.text('Followed: $formattedDate'), findsOneWidget);
     });
 
-    testWidgets('displays dateFollowing when provided', (WidgetTester tester) async {
+    testWidgets('displays dateFollowing when provided', (
+      WidgetTester tester,
+    ) async {
       final date = DateTime(2024, 1, 20);
       final formattedDate = DateFormat('MMM d, yyyy').format(date);
 
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: FollowerCard(
-              username: 'test_user',
-              dateFollowing: date,
-            ),
+            body: FollowerCard(username: 'test_user', dateFollowing: date),
           ),
         ),
       );
@@ -105,7 +109,9 @@ void main() {
       expect(find.text('Following since: $formattedDate'), findsOneWidget);
     });
 
-    testWidgets('displays both dates for comparison card', (WidgetTester tester) async {
+    testWidgets('displays both dates for comparison card', (
+      WidgetTester tester,
+    ) async {
       final followedDate = DateTime(2024, 1, 15);
       final followingDate = DateTime(2024, 1, 20);
 
@@ -123,13 +129,17 @@ void main() {
       );
 
       final formattedFollowed = DateFormat('MMM d, yyyy').format(followedDate);
-      final formattedFollowing = DateFormat('MMM d, yyyy').format(followingDate);
+      final formattedFollowing = DateFormat(
+        'MMM d, yyyy',
+      ).format(followingDate);
 
       expect(find.text('Followed you: $formattedFollowed'), findsOneWidget);
       expect(find.text('You followed: $formattedFollowing'), findsOneWidget);
     });
 
-    testWidgets('fromFollower factory creates correct widget', (WidgetTester tester) async {
+    testWidgets('fromFollower factory creates correct widget', (
+      WidgetTester tester,
+    ) async {
       final follower = Follower(
         id: 1,
         username: 'follower_user',
@@ -139,18 +149,16 @@ void main() {
       );
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: FollowerCard.fromFollower(follower),
-          ),
-        ),
+        MaterialApp(home: Scaffold(body: FollowerCard.fromFollower(follower))),
       );
 
       expect(find.text('@follower_user'), findsOneWidget);
       expect(find.text('Mutual'), findsOneWidget);
     });
 
-    testWidgets('fromFollowing factory creates correct widget', (WidgetTester tester) async {
+    testWidgets('fromFollowing factory creates correct widget', (
+      WidgetTester tester,
+    ) async {
       final following = Following(
         id: 2,
         username: 'following_user',
@@ -161,9 +169,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(
-            body: FollowerCard.fromFollowing(following),
-          ),
+          home: Scaffold(body: FollowerCard.fromFollowing(following)),
         ),
       );
 
@@ -171,7 +177,9 @@ void main() {
       expect(find.text('Mutual'), findsNothing);
     });
 
-    testWidgets('fromComparison factory creates correct widget', (WidgetTester tester) async {
+    testWidgets('fromComparison factory creates correct widget', (
+      WidgetTester tester,
+    ) async {
       final comparison = FollowerComparison(
         username: 'comparison_user',
         dateFollowed: DateTime(2024, 1, 15),
@@ -181,9 +189,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(
-            body: FollowerCard.fromComparison(comparison),
-          ),
+          home: Scaffold(body: FollowerCard.fromComparison(comparison)),
         ),
       );
 
@@ -191,7 +197,9 @@ void main() {
       expect(find.text('Mutual'), findsOneWidget);
     });
 
-    testWidgets('calls onTap callback when tapped', (WidgetTester tester) async {
+    testWidgets('calls onTap callback when tapped', (
+      WidgetTester tester,
+    ) async {
       bool tapped = false;
 
       await tester.pumpWidget(
@@ -214,7 +222,9 @@ void main() {
       expect(tapped, isTrue);
     });
 
-    testWidgets('handles empty username gracefully', (WidgetTester tester) async {
+    testWidgets('handles empty username gracefully', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -244,13 +254,18 @@ void main() {
       );
 
       final card = tester.widget<Card>(find.byType(Card));
-      expect(card.margin, const EdgeInsets.symmetric(horizontal: 16, vertical: 4));
+      expect(
+        card.margin,
+        const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      );
 
       final inkWell = tester.widget<InkWell>(find.byType(InkWell));
       expect(inkWell.borderRadius, BorderRadius.circular(12));
     });
 
-    testWidgets('avatar container has correct size and shape', (WidgetTester tester) async {
+    testWidgets('avatar container has correct size and shape', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -263,17 +278,21 @@ void main() {
       );
 
       final container = tester.widget<Container>(
-        find.ancestor(
-          of: find.text('T'),
-          matching: find.byType(Container),
-        ).first,
+        find
+            .ancestor(of: find.text('T'), matching: find.byType(Container))
+            .first,
       );
 
-      expect(container.constraints, const BoxConstraints.tightFor(width: 48, height: 48));
+      expect(
+        container.constraints,
+        const BoxConstraints.tightFor(width: 48, height: 48),
+      );
       expect((container.decoration as BoxDecoration).shape, BoxShape.circle);
     });
 
-    testWidgets('displays correct icon for mutual badge', (WidgetTester tester) async {
+    testWidgets('displays correct icon for mutual badge', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -293,7 +312,9 @@ void main() {
       expect(icon.size, 12);
     });
 
-    testWidgets('mutual badge has correct styling', (WidgetTester tester) async {
+    testWidgets('mutual badge has correct styling', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -306,10 +327,13 @@ void main() {
         ),
       );
 
-      final containerFinder = find.ancestor(
-        of: find.text('Mutual'),
-        matching: find.byType(Container),
-      ).first;
+      final containerFinder =
+          find
+              .ancestor(
+                of: find.text('Mutual'),
+                matching: find.byType(Container),
+              )
+              .first;
 
       final container = tester.widget<Container>(containerFinder);
       final decoration = container.decoration as BoxDecoration;
