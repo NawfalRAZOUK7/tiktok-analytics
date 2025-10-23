@@ -46,44 +46,44 @@
 
 ### 5.3 Backend - API Endpoints
 
-- [ ] **GET `/api/followers/`** - Liste tous les followers
+- [x] **GET `/api/followers/`** - Liste tous les followers ✅
 
-  - Pagination (100 par page)
-  - Filtres: date_range, search par username
-  - Tri: date_followed, username alphabétique
+  - Pagination (100 par page) ✅
+  - Filtres: date_range, search par username ✅
+  - Tri: date_followed, username alphabétique ✅
 
-- [ ] **GET `/api/following/`** - Liste tous les following
+- [x] **GET `/api/following/`** - Liste tous les following ✅
 
-  - Même structure que followers
-  - Support recherche et filtres
+  - Même structure que followers ✅
+  - Support recherche et filtres ✅
 
-- [ ] **GET `/api/followers/stats/`** - Statistiques followers
+- [x] **GET `/api/followers/stats/`** - Statistiques followers ✅
 
-  - Total followers/following
-  - Croissance hebdomadaire/mensuelle
-  - Ratio followers/following
-  - Top dates d'acquisition
+  - Total followers/following ✅
+  - Croissance hebdomadaire/mensuelle ✅
+  - Ratio followers/following ✅
+  - Top dates d'acquisition ✅
 
-- [ ] **GET `/api/followers/common/`** - Followers communs (mutuals)
+- [x] **GET `/api/followers/common/`** - Followers communs (mutuals) ✅
 
-  - Retourne intersection entre followers et following
-  - Calcul: users présents dans les deux listes
-  - Tri par date la plus récente
+  - Retourne intersection entre followers et following ✅
+  - Calcul: users présents dans les deux listes ✅
+  - Tri par date la plus récente ✅
 
-- [ ] **GET `/api/followers/followers-only/`** - Followers uniquement
+- [x] **GET `/api/followers/followers-only/`** - Followers uniquement ✅
 
-  - Retourne différence: followers - following
-  - Utilisateurs qui vous suivent mais que vous ne suivez pas
+  - Retourne différence: followers - following ✅
+  - Utilisateurs qui vous suivent mais que vous ne suivez pas ✅
 
-- [ ] **GET `/api/followers/following-only/`** - Following uniquement
+- [x] **GET `/api/followers/following-only/`** - Following uniquement ✅
 
-  - Retourne différence: following - followers
-  - Utilisateurs que vous suivez mais qui ne vous suivent pas
+  - Retourne différence: following - followers ✅
+  - Utilisateurs que vous suivez mais qui ne vous suivent pas ✅
 
-- [ ] **GET `/api/followers/growth/`** - Analyse de croissance
-  - Évolution des followers dans le temps
-  - Détection de pics d'acquisition
-  - Taux de rétention
+- [x] **GET `/api/followers/growth/`** - Analyse de croissance ✅
+  - Évolution des followers dans le temps ✅
+  - Détection de pics d'acquisition ✅
+  - Taux de rétention ✅
 
 ### 5.4 Frontend - Écrans Followers/Following
 

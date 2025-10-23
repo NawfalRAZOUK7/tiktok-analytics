@@ -5,12 +5,24 @@ from rest_framework.parsers import JSONParser
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django.conf import settings
+from django.db.models import Count, Q
+from datetime import datetime, timedelta
+from collections import defaultdict
 import json
 import jsonschema
 from pathlib import Path
 
-from .models import Post
-from .serializers import PostSerializer, TikTokJSONImportSerializer
+from .models import Post, Follower, Following, FollowerSnapshot
+from .serializers import (
+    PostSerializer, 
+    TikTokJSONImportSerializer,
+    FollowerSerializer,
+    FollowingSerializer,
+    FollowerSnapshotSerializer,
+    FollowerStatsSerializer,
+    FollowerComparisonSerializer,
+    FollowerGrowthSerializer,
+)
 
 
 class PostViewSet(viewsets.ReadOnlyModelViewSet):
@@ -407,3 +419,354 @@ class PostViewSet(viewsets.ReadOnlyModelViewSet):
         }
         
         return Response(result)
+
+
+# ============================================
+# Followers/Following ViewSets
+# ============================================
+
+class FollowerViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    ViewSet for Followers.
+    
+    Provides:
+    - list: GET /api/followers/ - List all followers with pagination, filtering, search
+    - retrieve: GET /api/followers/{id}/ - Get a single follower by ID
+    - stats: GET /api/followers/stats/ - Get follower statistics
+    - common: GET /api/followers/common/ - Get mutuals (common followers/following)
+    - followers_only: GET /api/followers/followers-only/ - Get followers not followed back
+    - following_only: GET /api/followers/following-only/ - Get following who don't follow back
+    - growth: GET /api/followers/growth/ - Get growth analysis over time
+    """
+    serializer_class = FollowerSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    
+    # Filtering
+    filterset_fields = {
+        'date_followed': ['gte', 'lte', 'exact'],
+    }
+    
+    # Search
+    search_fields = ['username']
+    
+    # Ordering
+    ordering_fields = ['date_followed', 'username']
+    ordering = ['-date_followed']  # Default ordering
+    
+    def get_queryset(self):
+        """Filter followers by authenticated user."""
+        return Follower.objects.filter(user=self.request.user)
+    
+    @action(detail=False, methods=['get'])
+    def stats(self, request):
+        """
+        GET /api/followers/stats/
+        
+        Returns comprehensive follower statistics:
+        - Total followers/following
+        - Mutuals count
+        - Followers-only count
+        - Following-only count
+        - Follower ratio
+        - Weekly/monthly growth
+        - Top acquisition dates
+        """
+        user = request.user
+        
+        # Get all followers and following
+        followers = set(Follower.objects.filter(user=user).values_list('username', flat=True))
+        following = set(Following.objects.filter(user=user).values_list('username', flat=True))
+        
+        # Calculate mutuals and distinct sets
+        mutuals = followers & following
+        followers_only = followers - following
+        following_only = following - followers
+        
+        # Calculate ratio
+        follower_ratio = round(len(followers) / len(following), 2) if len(following) > 0 else None
+        
+        # Weekly growth (last 7 days)
+        week_ago = datetime.now() - timedelta(days=7)
+        weekly_followers_gained = Follower.objects.filter(
+            user=user, 
+            date_followed__gte=week_ago
+        ).count()
+        weekly_following_gained = Following.objects.filter(
+            user=user, 
+            date_followed__gte=week_ago
+        ).count()
+        
+        # Monthly growth (last 30 days)
+        month_ago = datetime.now() - timedelta(days=30)
+        monthly_followers_gained = Follower.objects.filter(
+            user=user, 
+            date_followed__gte=month_ago
+        ).count()
+        monthly_following_gained = Following.objects.filter(
+            user=user, 
+            date_followed__gte=month_ago
+        ).count()
+        
+        # Top acquisition dates (top 10 dates with most followers gained)
+        from django.db.models.functions import TruncDate
+        top_dates = (
+            Follower.objects.filter(user=user)
+            .annotate(date_only=TruncDate('date_followed'))
+            .values('date_only')
+            .annotate(count=Count('id'))
+            .order_by('-count')[:10]
+        )
+        
+        top_acquisition_dates = [
+            {
+                'date': item['date_only'].isoformat(),
+                'followers_gained': item['count']
+            }
+            for item in top_dates
+        ]
+        
+        stats_data = {
+            'total_followers': len(followers),
+            'total_following': len(following),
+            'mutuals_count': len(mutuals),
+            'followers_only_count': len(followers_only),
+            'following_only_count': len(following_only),
+            'follower_ratio': follower_ratio,
+            'weekly_growth': {
+                'followers': weekly_followers_gained,
+                'following': weekly_following_gained,
+            },
+            'monthly_growth': {
+                'followers': monthly_followers_gained,
+                'following': monthly_following_gained,
+            },
+            'top_acquisition_dates': top_acquisition_dates,
+        }
+        
+        serializer = FollowerStatsSerializer(stats_data)
+        return Response(serializer.data)
+    
+    @action(detail=False, methods=['get'])
+    def common(self, request):
+        """
+        GET /api/followers/common/
+        
+        Returns mutuals (users who follow you AND you follow them).
+        Sorted by most recent date.
+        """
+        user = request.user
+        
+        # Get followers and following usernames
+        followers_qs = Follower.objects.filter(user=user)
+        following_qs = Following.objects.filter(user=user)
+        
+        followers_dict = {f.username: f.date_followed for f in followers_qs}
+        following_dict = {f.username: f.date_followed for f in following_qs}
+        
+        # Find intersection
+        common_usernames = set(followers_dict.keys()) & set(following_dict.keys())
+        
+        # Build result with both dates
+        mutuals = []
+        for username in common_usernames:
+            mutuals.append({
+                'username': username,
+                'date_followed': followers_dict[username],
+                'date_following': following_dict[username],
+                'is_mutual': True,
+            })
+        
+        # Sort by most recent date (either followed or following)
+        mutuals.sort(key=lambda x: max(x['date_followed'], x['date_following']), reverse=True)
+        
+        # Apply pagination
+        from rest_framework.pagination import PageNumberPagination
+        paginator = PageNumberPagination()
+        paginator.page_size = 100
+        page = paginator.paginate_queryset(mutuals, request)
+        
+        serializer = FollowerComparisonSerializer(page, many=True)
+        return paginator.get_paginated_response(serializer.data)
+    
+    @action(detail=False, methods=['get'], url_path='followers-only')
+    def followers_only(self, request):
+        """
+        GET /api/followers/followers-only/
+        
+        Returns users who follow you but you don't follow them back.
+        """
+        user = request.user
+        
+        # Get followers and following usernames
+        followers = set(Follower.objects.filter(user=user).values_list('username', flat=True))
+        following = set(Following.objects.filter(user=user).values_list('username', flat=True))
+        
+        # Calculate difference
+        followers_only_usernames = followers - following
+        
+        # Get full objects
+        followers_only_qs = Follower.objects.filter(
+            user=user,
+            username__in=followers_only_usernames
+        ).order_by('-date_followed')
+        
+        # Build result
+        result = []
+        for follower in followers_only_qs:
+            result.append({
+                'username': follower.username,
+                'date_followed': follower.date_followed,
+                'date_following': None,
+                'is_mutual': False,
+            })
+        
+        # Apply pagination
+        from rest_framework.pagination import PageNumberPagination
+        paginator = PageNumberPagination()
+        paginator.page_size = 100
+        page = paginator.paginate_queryset(result, request)
+        
+        serializer = FollowerComparisonSerializer(page, many=True)
+        return paginator.get_paginated_response(serializer.data)
+    
+    @action(detail=False, methods=['get'], url_path='following-only')
+    def following_only(self, request):
+        """
+        GET /api/followers/following-only/
+        
+        Returns users you follow but who don't follow you back.
+        """
+        user = request.user
+        
+        # Get followers and following usernames
+        followers = set(Follower.objects.filter(user=user).values_list('username', flat=True))
+        following = set(Following.objects.filter(user=user).values_list('username', flat=True))
+        
+        # Calculate difference
+        following_only_usernames = following - followers
+        
+        # Get full objects
+        following_only_qs = Following.objects.filter(
+            user=user,
+            username__in=following_only_usernames
+        ).order_by('-date_followed')
+        
+        # Build result
+        result = []
+        for follow in following_only_qs:
+            result.append({
+                'username': follow.username,
+                'date_followed': None,
+                'date_following': follow.date_followed,
+                'is_mutual': False,
+            })
+        
+        # Apply pagination
+        from rest_framework.pagination import PageNumberPagination
+        paginator = PageNumberPagination()
+        paginator.page_size = 100
+        page = paginator.paginate_queryset(result, request)
+        
+        serializer = FollowerComparisonSerializer(page, many=True)
+        return paginator.get_paginated_response(serializer.data)
+    
+    @action(detail=False, methods=['get'])
+    def growth(self, request):
+        """
+        GET /api/followers/growth/
+        
+        Returns follower/following growth analysis over time.
+        Uses FollowerSnapshot records to track historical changes.
+        
+        Query params:
+        - period: 'week', 'month', 'year', 'all' (default: 'month')
+        """
+        user = request.user
+        period = request.query_params.get('period', 'month')
+        
+        # Determine date range
+        now = datetime.now()
+        if period == 'week':
+            start_date = now - timedelta(days=7)
+        elif period == 'month':
+            start_date = now - timedelta(days=30)
+        elif period == 'year':
+            start_date = now - timedelta(days=365)
+        else:  # 'all'
+            start_date = None
+        
+        # Get snapshots
+        snapshots_qs = FollowerSnapshot.objects.filter(user=user)
+        if start_date:
+            snapshots_qs = snapshots_qs.filter(snapshot_date__gte=start_date)
+        snapshots_qs = snapshots_qs.order_by('snapshot_date')
+        
+        # Build growth data
+        growth_data = []
+        prev_snapshot = None
+        
+        for snapshot in snapshots_qs:
+            if prev_snapshot:
+                followers_gained = max(snapshot.follower_count - prev_snapshot.follower_count, 0)
+                followers_lost = max(prev_snapshot.follower_count - snapshot.follower_count, 0)
+                following_gained = max(snapshot.following_count - prev_snapshot.following_count, 0)
+                following_lost = max(prev_snapshot.following_count - snapshot.following_count, 0)
+                net_follower_growth = snapshot.follower_count - prev_snapshot.follower_count
+                net_following_growth = snapshot.following_count - prev_snapshot.following_count
+            else:
+                followers_gained = 0
+                followers_lost = 0
+                following_gained = 0
+                following_lost = 0
+                net_follower_growth = 0
+                net_following_growth = 0
+            
+            growth_data.append({
+                'date': snapshot.snapshot_date.date(),
+                'follower_count': snapshot.follower_count,
+                'following_count': snapshot.following_count,
+                'follower_ratio': snapshot.follower_ratio,
+                'followers_gained': followers_gained,
+                'followers_lost': followers_lost,
+                'following_gained': following_gained,
+                'following_lost': following_lost,
+                'net_follower_growth': net_follower_growth,
+                'net_following_growth': net_following_growth,
+            })
+            
+            prev_snapshot = snapshot
+        
+        serializer = FollowerGrowthSerializer(growth_data, many=True)
+        return Response({
+            'period': period,
+            'data_points': len(growth_data),
+            'growth': serializer.data
+        })
+
+
+class FollowingViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    ViewSet for Following.
+    
+    Provides:
+    - list: GET /api/following/ - List all following with pagination, filtering, search
+    - retrieve: GET /api/following/{id}/ - Get a single following by ID
+    """
+    serializer_class = FollowingSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    
+    # Filtering
+    filterset_fields = {
+        'date_followed': ['gte', 'lte', 'exact'],
+    }
+    
+    # Search
+    search_fields = ['username']
+    
+    # Ordering
+    ordering_fields = ['date_followed', 'username']
+    ordering = ['-date_followed']  # Default ordering
+    
+    def get_queryset(self):
+        """Filter following by authenticated user."""
+        return Following.objects.filter(user=self.request.user)

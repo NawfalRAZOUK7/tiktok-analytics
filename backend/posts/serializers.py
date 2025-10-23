@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Post
+from .models import Post, Follower, Following, FollowerSnapshot
 from datetime import datetime
 from dateutil import parser
 
@@ -169,3 +169,83 @@ class TikTokJSONImportSerializer(serializers.Serializer):
             'failed': len(errors),
             'errors': errors if errors else None,
         }
+
+
+# ============================================
+# Followers/Following Serializers
+# ============================================
+
+class FollowerSerializer(serializers.ModelSerializer):
+    """
+    Serializer for Follower model.
+    Used for API responses (GET /api/followers/)
+    """
+    class Meta:
+        model = Follower
+        fields = ['id', 'username', 'date_followed', 'created_at']
+        read_only_fields = ['id', 'created_at']
+
+
+class FollowingSerializer(serializers.ModelSerializer):
+    """
+    Serializer for Following model.
+    Used for API responses (GET /api/following/)
+    """
+    class Meta:
+        model = Following
+        fields = ['id', 'username', 'date_followed', 'created_at']
+        read_only_fields = ['id', 'created_at']
+
+
+class FollowerSnapshotSerializer(serializers.ModelSerializer):
+    """
+    Serializer for FollowerSnapshot model.
+    Includes computed follower_ratio property.
+    """
+    follower_ratio = serializers.ReadOnlyField()
+    
+    class Meta:
+        model = FollowerSnapshot
+        fields = ['id', 'snapshot_date', 'follower_count', 'following_count', 'follower_ratio', 'created_at']
+        read_only_fields = ['id', 'created_at']
+
+
+class FollowerStatsSerializer(serializers.Serializer):
+    """
+    Serializer for follower statistics endpoint.
+    """
+    total_followers = serializers.IntegerField()
+    total_following = serializers.IntegerField()
+    mutuals_count = serializers.IntegerField()
+    followers_only_count = serializers.IntegerField()
+    following_only_count = serializers.IntegerField()
+    follower_ratio = serializers.FloatField()
+    weekly_growth = serializers.DictField(child=serializers.IntegerField())
+    monthly_growth = serializers.DictField(child=serializers.IntegerField())
+    top_acquisition_dates = serializers.ListField(child=serializers.DictField())
+
+
+class FollowerComparisonSerializer(serializers.Serializer):
+    """
+    Serializer for follower comparison (mutuals, followers-only, following-only).
+    """
+    username = serializers.CharField()
+    date_followed = serializers.DateTimeField(required=False, allow_null=True)
+    date_following = serializers.DateTimeField(required=False, allow_null=True)
+    is_mutual = serializers.BooleanField(default=False)
+
+
+class FollowerGrowthSerializer(serializers.Serializer):
+    """
+    Serializer for follower growth analysis.
+    """
+    date = serializers.DateField()
+    follower_count = serializers.IntegerField()
+    following_count = serializers.IntegerField()
+    follower_ratio = serializers.FloatField()
+    followers_gained = serializers.IntegerField()
+    followers_lost = serializers.IntegerField()
+    following_gained = serializers.IntegerField()
+    following_lost = serializers.IntegerField()
+    net_follower_growth = serializers.IntegerField()
+    net_following_growth = serializers.IntegerField()
