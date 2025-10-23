@@ -158,7 +158,7 @@
 
 - [ ] **Tests Frontend** (en cours)
   - Widget tests pour FollowerCard ✅ (17 tests)
-  - Tests écrans followers/following
+  - Tests écrans followers/following ✅ (12 tests: 6 FollowersScreen + 6 FollowingScreen)
   - Tests comparaison (mutuals, distincts)
   - Tests recherche et filtres
 
