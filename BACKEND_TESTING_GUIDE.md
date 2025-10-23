@@ -20,7 +20,7 @@ This document covers the comprehensive testing infrastructure and management com
 ### Testing Framework
 
 - **pytest**: Modern testing framework with powerful features
-- **pytest-django**: Django plugin for pytest  
+- **pytest-django**: Django plugin for pytest
 - **pytest-cov**: Coverage reporting plugin
 
 ### 📁 Test Structure
@@ -38,11 +38,12 @@ backend/posts/tests/
 ### ⚙️ Configuration
 
 **pytest.ini**:
+
 ```ini
 [pytest]
 DJANGO_SETTINGS_MODULE = backend.settings
 python_files = tests.py test_*.py *_tests.py
-addopts = 
+addopts =
     --cov=posts
     --cov=accounts
     --cov-report=html
@@ -81,6 +82,7 @@ pip install pytest pytest-django pytest-cov
 ```
 
 Or with requirements:
+
 ```bash
 pip install -r requirements-dev.txt
 ```
@@ -176,12 +178,14 @@ pytest
 ### View Coverage Reports
 
 **Terminal Output**:
+
 ```bash
 # Shows coverage summary in terminal
 pytest --cov=posts --cov-report=term-missing
 ```
 
 **HTML Report**:
+
 ```bash
 # Generate HTML report
 pytest --cov=posts --cov-report=html
@@ -194,6 +198,7 @@ xdg-open htmlcov/index.html
 ```
 
 **XML Report** (for CI/CD):
+
 ```bash
 pytest --cov=posts --cov-report=xml
 ```
@@ -206,12 +211,12 @@ pytest --cov=posts --cov-report=xml
 
 ### Current Test Coverage
 
-| Module | Tests | Coverage |
-|--------|-------|----------|
-| **models.py** | 30+ tests | ~95% |
-| **serializers.py** | 20+ tests | ~90% |
-| **views.py** | 40+ tests | ~85% |
-| **management/commands** | 15+ tests | ~90% |
+| Module                  | Tests     | Coverage |
+| ----------------------- | --------- | -------- |
+| **models.py**           | 30+ tests | ~95%     |
+| **serializers.py**      | 20+ tests | ~90%     |
+| **views.py**            | 40+ tests | ~85%     |
+| **management/commands** | 15+ tests | ~90%     |
 
 **Total**: 105+ comprehensive tests
 
@@ -245,33 +250,41 @@ Options:
 #### Examples
 
 **1. Dry Run (Validation Only)**:
+
 ```bash
 python manage.py import_tiktok_json posts.json --dry-run
 ```
+
 - Validates JSON format and post data
 - Shows what would be imported
 - No data is actually created
 
 **2. Standard Import**:
+
 ```bash
 python manage.py import_tiktok_json posts.json
 ```
+
 - Imports all valid posts
 - Skips duplicates by default
 - Shows progress bar
 
 **3. Clear and Import**:
+
 ```bash
 python manage.py import_tiktok_json posts.json --clear-existing
 ```
+
 - ⚠️ **WARNING**: Deletes all existing posts
 - Imports fresh data from JSON
 - Use for complete data refresh
 
 **4. Update Existing Posts**:
+
 ```bash
 python manage.py import_tiktok_json posts.json --update-duplicates
 ```
+
 - Updates posts with matching post_id
 - Creates new posts for non-duplicates
 - Preserves database integrity
@@ -299,6 +312,7 @@ Expected JSON structure:
 ```
 
 **Required Fields**:
+
 - `id` (string): Unique post identifier
 - `title` (string): Post title
 - `likes` (integer): Number of likes
@@ -307,6 +321,7 @@ Expected JSON structure:
 - `video_link` (URL): Video link
 
 **Optional Fields**:
+
 - `views` (integer): Number of views
 - `comments` (integer): Number of comments
 - `shares` (integer): Number of shares
@@ -356,7 +371,7 @@ def test_create_post(create_post):
         title='Test',
         likes=100
     )
-    
+
     assert post.post_id == '123'
     assert post.title == 'Test'
     assert post.likes == 100
@@ -379,10 +394,10 @@ def test_negative_likes_raises_error(create_post):
 def test_serialize_post(sample_post_data):
     """Test serializing post data."""
     serializer = PostSerializer(data=sample_post_data)
-    
+
     assert serializer.is_valid()
     post = serializer.save()
-    
+
     assert post.title == sample_post_data['title']
 ```
 
@@ -393,10 +408,10 @@ def test_serialize_post(sample_post_data):
 def test_list_posts(api_client, create_multiple_posts):
     """Test listing posts via API."""
     create_multiple_posts(count=10)
-    
+
     url = reverse('post-list')
     response = api_client.get(url)
-    
+
     assert response.status_code == 200
     assert response.data['count'] == 10
 ```
@@ -409,7 +424,7 @@ def test_create_requires_auth(api_client, sample_post_data):
     """Test that creating post requires authentication."""
     url = reverse('post-list')
     response = api_client.post(url, sample_post_data, format='json')
-    
+
     assert response.status_code in [401, 403]
 ```
 
@@ -422,9 +437,9 @@ def test_import_command(sample_post_data):
     with tempfile.NamedTemporaryFile(mode='w', suffix='.json') as f:
         json.dump([sample_post_data], f)
         f.flush()
-        
+
         call_command('import_tiktok_json', f.name)
-        
+
         assert Post.objects.count() == 1
 ```
 
@@ -453,6 +468,7 @@ def test_with_custom_fixture(custom_post):
 ### GitHub Actions Integration
 
 Tests run automatically on:
+
 - **Push** to any branch
 - **Pull Request** to develop/main
 - **Scheduled** (daily)
@@ -460,6 +476,7 @@ Tests run automatically on:
 ### CI Workflow
 
 `.github/workflows/backend-ci.yml`:
+
 ```yaml
 - name: Run Tests
   run: |
@@ -475,6 +492,7 @@ Tests run automatically on:
 ### Coverage Reporting
 
 Coverage is automatically uploaded to:
+
 - **Codecov**: Public coverage reports
 - **GitHub Actions**: Artifacts stored for 30 days
 
@@ -514,6 +532,7 @@ Coverage is automatically uploaded to:
 ### Common Issues
 
 **1. Import Errors**:
+
 ```bash
 # Make sure you're in the backend directory
 cd backend
@@ -523,6 +542,7 @@ export DJANGO_SETTINGS_MODULE=backend.settings
 ```
 
 **2. Database Errors**:
+
 ```bash
 # Run migrations first
 python manage.py migrate
@@ -532,6 +552,7 @@ pytest --create-db
 ```
 
 **3. Coverage Not Generated**:
+
 ```bash
 # Ensure pytest-cov is installed
 pip install pytest-cov
@@ -541,6 +562,7 @@ pytest --cov=posts --cov-report=html
 ```
 
 **4. Tests Hanging**:
+
 ```bash
 # Check for infinite loops or missing mocks
 # Use -vv to see which test is running
@@ -548,6 +570,7 @@ pytest -vv
 ```
 
 **5. Import Command Fails**:
+
 ```bash
 # Check JSON format
 python -m json.tool posts.json
@@ -588,7 +611,7 @@ python manage.py import_tiktok_json posts.json --dry-run
 ✅ Authentication and permission tests  
 ✅ Transaction safety and rollback  
 ✅ Progress reporting for imports  
-✅ Validation and error handling  
+✅ Validation and error handling
 
 ---
 
@@ -601,6 +624,7 @@ python manage.py import_tiktok_json posts.json --dry-run
 5. **Monitor CI**: Check GitHub Actions for automated test runs
 
 For more information, see:
+
 - [Django Testing Documentation](https://docs.djangoproject.com/en/stable/topics/testing/)
 - [pytest Documentation](https://docs.pytest.org/)
 - [pytest-django Documentation](https://pytest-django.readthedocs.io/)

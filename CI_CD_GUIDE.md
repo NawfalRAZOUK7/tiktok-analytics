@@ -25,13 +25,13 @@ This project uses **GitHub Actions** for continuous integration and continuous d
 
 ### Active Workflows
 
-| Workflow | File | Trigger | Purpose |
-|----------|------|---------|---------|
-| **Backend CI/CD** | `backend-ci.yml` | Push to main/develop, PRs | Test, lint, build, deploy backend |
-| **Frontend CI/CD** | `frontend-ci.yml` | Push to main/develop, PRs | Test, analyze, build, deploy frontend |
-| **Docker Build** | `docker-build.yml` | Push to main/develop, tags | Build and push Docker images |
-| **Dependency Updates** | `dependency-updates.yml` | Weekly schedule, manual | Auto-update dependencies |
-| **PR Checks** | `pr-checks.yml` | Pull requests | Validate PR format, size, conflicts |
+| Workflow               | File                     | Trigger                    | Purpose                               |
+| ---------------------- | ------------------------ | -------------------------- | ------------------------------------- |
+| **Backend CI/CD**      | `backend-ci.yml`         | Push to main/develop, PRs  | Test, lint, build, deploy backend     |
+| **Frontend CI/CD**     | `frontend-ci.yml`        | Push to main/develop, PRs  | Test, analyze, build, deploy frontend |
+| **Docker Build**       | `docker-build.yml`       | Push to main/develop, tags | Build and push Docker images          |
+| **Dependency Updates** | `dependency-updates.yml` | Weekly schedule, manual    | Auto-update dependencies              |
+| **PR Checks**          | `pr-checks.yml`          | Pull requests              | Validate PR format, size, conflicts   |
 
 ### Workflow Status Badges
 
@@ -52,6 +52,7 @@ Add these to your README.md (replace `YOUR_USERNAME` with your GitHub username):
 ### Jobs
 
 #### 1. **Test** (Matrix: Python 3.11, 3.12)
+
 - ✅ Code formatting check (Black)
 - ✅ Import sorting check (isort)
 - ✅ Linting (flake8)
@@ -61,20 +62,24 @@ Add these to your README.md (replace `YOUR_USERNAME` with your GitHub username):
 - ✅ Upload coverage to Codecov
 
 #### 2. **Security**
+
 - 🔒 Vulnerability scanning (Safety)
 - 🔒 Security issue detection (Bandit)
 - 🔒 Upload security reports
 
 #### 3. **Build & Validate**
+
 - 📦 Install production dependencies
 - 📦 Collect static files
 - 📦 Run deployment checks
 
 #### 4. **Deploy Staging** (develop branch)
+
 - 🚀 Deploy to staging environment
 - 🧪 Run smoke tests
 
 #### 5. **Deploy Production** (main branch)
+
 - 🚀 Deploy to production environment
 - 🧪 Run smoke tests
 - 📋 Create GitHub release
@@ -84,20 +89,20 @@ Add these to your README.md (replace `YOUR_USERNAME` with your GitHub username):
 ```yaml
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
     paths:
-      - 'backend/**'
+      - "backend/**"
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
     paths:
-      - 'backend/**'
+      - "backend/**"
 ```
 
 ### Environment Variables
 
 ```yaml
 DJANGO_SECRET_KEY: test-secret-key-for-ci
-DJANGO_DEBUG: 'False'
+DJANGO_DEBUG: "False"
 ENVIRONMENT: test
 ```
 
@@ -120,32 +125,39 @@ ENVIRONMENT: test
 ### Jobs
 
 #### 1. **Test**
+
 - ✅ Flutter code analysis
 - ✅ Dart formatting check
 - ✅ Run tests with coverage
 - ✅ Upload coverage to Codecov
 
 #### 2. **Build Web**
+
 - 🌐 Build Flutter web app (development)
 - 📦 Upload build artifact
 
 #### 3. **Build Android**
+
 - 🤖 Build Android APK (development)
 - 📦 Upload APK artifact
 
 #### 4. **Build iOS** (disabled by default)
+
 - 🍎 Build iOS app (requires Apple Developer account)
 
 #### 5. **Deploy Web Staging** (develop branch)
+
 - 🚀 Deploy to Firebase/Netlify staging
 - 🧪 Run smoke tests
 
 #### 6. **Deploy Web Production** (main branch)
+
 - 🚀 Deploy to Firebase/Netlify production
 - 🧪 Run smoke tests
 - 📋 Create GitHub release
 
 #### 7. **Deploy Android** (disabled by default)
+
 - 📱 Deploy to Google Play Store
 
 ### Triggers
@@ -153,13 +165,13 @@ ENVIRONMENT: test
 ```yaml
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
     paths:
-      - 'frontend/**'
+      - "frontend/**"
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
     paths:
-      - 'frontend/**'
+      - "frontend/**"
 ```
 
 ### Build Configurations
@@ -194,6 +206,7 @@ flutter build web \
 ### Jobs
 
 #### 1. **Build and Push**
+
 - 🐳 Build Docker image with BuildX
 - 🏷️ Auto-generate tags (branch, SHA, semver, latest)
 - 📤 Push to GitHub Container Registry
@@ -201,11 +214,13 @@ flutter build web \
 - 📊 Upload results to GitHub Security
 
 #### 2. **Test Docker Image**
+
 - 🧪 Pull and test image
 - 🧪 Run Django checks in container
 - 🧪 Validate docker-compose config
 
 #### 3. **Deploy Docker** (main branch)
+
 - 🚀 Deploy to production (placeholder)
 
 ### Container Registry
@@ -224,11 +239,11 @@ ghcr.io/YOUR_USERNAME/socialmedia:main-abc123
 ```yaml
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
     tags:
-      - 'v*'
+      - "v*"
   pull_request:
-    branches: [ main ]
+    branches: [main]
 ```
 
 ### Pull Docker Image
@@ -248,6 +263,7 @@ docker run -d \
 ### Multi-Platform Support
 
 Images are built for:
+
 - ✅ `linux/amd64` (x86_64)
 - ✅ `linux/arm64` (ARM64/Apple Silicon)
 
@@ -260,16 +276,19 @@ Images are built for:
 ### Jobs
 
 #### 1. **Update Python Dependencies**
+
 - 📦 Check for updates (pip-upgrader)
 - 🔒 Run security audit (Safety)
 - 🔀 Create PR with updates
 
 #### 2. **Update Flutter Dependencies**
+
 - 📦 Upgrade packages (flutter pub upgrade)
 - 🧪 Run tests to verify compatibility
 - 🔀 Create PR with updates
 
 #### 3. **Security Audit**
+
 - 🔒 Run Safety check (Python)
 - 🔒 Run Bandit scan (Python)
 - 📊 Upload security reports
@@ -280,7 +299,7 @@ Runs **every Monday at 9 AM UTC**:
 
 ```yaml
 schedule:
-  - cron: '0 9 * * 1'
+  - cron: "0 9 * * 1"
 ```
 
 ### Manual Trigger
@@ -294,6 +313,7 @@ You can also trigger manually:
 ### Automated PRs
 
 Creates PRs with labels:
+
 - `dependencies` - Dependency update
 - `automated` - Automated change
 
@@ -306,24 +326,30 @@ Creates PRs with labels:
 ### Jobs
 
 #### 1. **PR Information**
+
 - 📝 Display PR details (title, author, files changed)
 
 #### 2. **Validate PR**
+
 - ✅ Check PR title format (conventional commits)
 - ✅ Check PR has description
 - ⚠️ Check for breaking changes
 
 #### 3. **Auto Label PR**
+
 - 🏷️ Label based on files changed
 
 #### 4. **Size Label**
+
 - 🏷️ Add size labels (XS, S, M, L, XL)
 - ⚠️ Warn if PR is very large
 
 #### 5. **Check for Conflicts**
+
 - 🔍 Detect merge conflicts
 
 #### 6. **Lint Commit Messages**
+
 - 📝 Validate commit message format
 
 ### PR Title Format
@@ -344,13 +370,13 @@ ci: update CI/CD workflow
 
 ### Size Labels
 
-| Label | Files Changed |
-|-------|---------------|
-| `size/XS` | < 10 |
-| `size/S` | 10-100 |
-| `size/M` | 100-500 |
-| `size/L` | 500-1000 |
-| `size/XL` | > 1000 |
+| Label     | Files Changed |
+| --------- | ------------- |
+| `size/XS` | < 10          |
+| `size/S`  | 10-100        |
+| `size/M`  | 100-500       |
+| `size/L`  | 500-1000      |
+| `size/XL` | > 1000        |
 
 ---
 
@@ -361,6 +387,7 @@ ci: update CI/CD workflow
 GitHub Actions is enabled by default for public repositories.
 
 For private repositories:
+
 1. Go to **Settings** → **Actions** → **General**
 2. Enable **Allow all actions and reusable workflows**
 
@@ -370,22 +397,22 @@ Go to **Settings** → **Secrets and variables** → **Actions**
 
 #### Required Secrets
 
-| Secret | Purpose | Example |
-|--------|---------|---------|
+| Secret               | Purpose                 | Example                          |
+| -------------------- | ----------------------- | -------------------------------- |
 | `PRODUCTION_API_URL` | Production API endpoint | `https://api.yourdomain.com/api` |
-| `FIREBASE_TOKEN` | Firebase deployment | Run `firebase login:ci` |
-| `NETLIFY_TOKEN` | Netlify deployment | Get from Netlify dashboard |
-| `CODECOV_TOKEN` | Coverage reporting | Get from Codecov.io |
+| `FIREBASE_TOKEN`     | Firebase deployment     | Run `firebase login:ci`          |
+| `NETLIFY_TOKEN`      | Netlify deployment      | Get from Netlify dashboard       |
+| `CODECOV_TOKEN`      | Coverage reporting      | Get from Codecov.io              |
 
 #### Optional Secrets
 
-| Secret | Purpose |
-|--------|---------|
-| `DOCKER_USERNAME` | Docker Hub username |
-| `DOCKER_PASSWORD` | Docker Hub password |
-| `HEROKU_API_KEY` | Heroku deployment |
-| `AWS_ACCESS_KEY_ID` | AWS deployment |
-| `AWS_SECRET_ACCESS_KEY` | AWS deployment |
+| Secret                        | Purpose               |
+| ----------------------------- | --------------------- |
+| `DOCKER_USERNAME`             | Docker Hub username   |
+| `DOCKER_PASSWORD`             | Docker Hub password   |
+| `HEROKU_API_KEY`              | Heroku deployment     |
+| `AWS_ACCESS_KEY_ID`           | AWS deployment        |
+| `AWS_SECRET_ACCESS_KEY`       | AWS deployment        |
 | `GOOGLE_PLAY_SERVICE_ACCOUNT` | Play Store deployment |
 
 ### 3. Configure Environments
@@ -393,6 +420,7 @@ Go to **Settings** → **Secrets and variables** → **Actions**
 Go to **Settings** → **Environments**
 
 Create three environments:
+
 1. **staging** - Staging environment
 2. **production** - Production environment (add protection rules)
 3. **frontend-production** - Frontend production
@@ -414,12 +442,12 @@ updates:
     directory: "/backend"
     schedule:
       interval: "weekly"
-  
+
   - package-ecosystem: "pub"
     directory: "/frontend"
     schedule:
       interval: "weekly"
-  
+
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
@@ -431,6 +459,7 @@ updates:
 Go to **Settings** → **Branches** → **Add rule**
 
 For `main` branch:
+
 - ✅ Require pull request reviews (1 approval)
 - ✅ Require status checks to pass:
   - `Test Backend`
@@ -538,6 +567,7 @@ Sign up at [Codecov.io](https://codecov.io) and add:
 ### Workflow Artifacts
 
 Download build artifacts:
+
 1. Go to workflow run
 2. Scroll to **Artifacts** section
 3. Download:
@@ -557,6 +587,7 @@ Download build artifacts:
 **Symptoms:** Push to branch but no workflow runs
 
 **Solutions:**
+
 - Check workflow file syntax (use YAML validator)
 - Verify `paths` filter matches changed files
 - Ensure Actions are enabled in repository settings
@@ -567,6 +598,7 @@ Download build artifacts:
 **Symptoms:** Tests pass locally but fail in CI
 
 **Solutions:**
+
 ```bash
 # Ensure environment variables are set
 env:
@@ -585,6 +617,7 @@ python manage.py migrate
 **Symptoms:** Docker image fails to build
 
 **Solutions:**
+
 ```bash
 # Test locally first
 docker build -t test-image .
@@ -601,6 +634,7 @@ ls -la  # Ensure Dockerfile is in root
 **Symptoms:** Build succeeds but deployment fails
 
 **Solutions:**
+
 - Verify secrets are set correctly
 - Check environment is configured
 - Ensure platform credentials are valid
@@ -611,6 +645,7 @@ ls -la  # Ensure Dockerfile is in root
 **Symptoms:** `Permission denied` errors
 
 **Solutions:**
+
 ```yaml
 # Add required permissions to job
 permissions:
@@ -624,6 +659,7 @@ permissions:
 #### Enable Debug Logging
 
 Add to workflow:
+
 ```yaml
 env:
   ACTIONS_STEP_DEBUG: true
@@ -633,6 +669,7 @@ env:
 #### Test Workflow Locally
 
 Use [act](https://github.com/nektos/act):
+
 ```bash
 # Install act
 brew install act  # macOS
@@ -693,8 +730,8 @@ Add to `deploy-production` job:
 - name: Deploy to Firebase
   uses: FirebaseExtended/action-hosting-deploy@v0
   with:
-    repoToken: '${{ secrets.GITHUB_TOKEN }}'
-    firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
+    repoToken: "${{ secrets.GITHUB_TOKEN }}"
+    firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
     channelId: live
 ```
 
@@ -705,8 +742,8 @@ Test multiple versions:
 ```yaml
 strategy:
   matrix:
-    python-version: ['3.10', '3.11', '3.12']
-    django-version: ['4.2', '5.0']
+    python-version: ["3.10", "3.11", "3.12"]
+    django-version: ["4.2", "5.0"]
 ```
 
 ### Scheduled Workflows
@@ -714,9 +751,9 @@ strategy:
 ```yaml
 on:
   schedule:
-    - cron: '0 0 * * 0'  # Weekly
-    - cron: '0 */6 * * *'  # Every 6 hours
-    - cron: '0 9 * * 1-5'  # Weekdays at 9 AM
+    - cron: "0 0 * * 0" # Weekly
+    - cron: "0 */6 * * *" # Every 6 hours
+    - cron: "0 9 * * 1-5" # Weekdays at 9 AM
 ```
 
 ---

@@ -27,8 +27,9 @@ Open `README.md` and replace `YOUR_USERNAME` with your actual GitHub username:
 
 1. Go to: https://github.com/NawfalRAZOUK7/tiktok-analytics/actions
 2. You should see 5 workflows listed:
+
    - ✅ Backend CI/CD
-   - ✅ Frontend CI/CD  
+   - ✅ Frontend CI/CD
    - ✅ Docker Build & Push
    - ✅ Dependency Updates
    - ✅ Pull Request Checks
@@ -56,18 +57,21 @@ Open `README.md` and replace `YOUR_USERNAME` with your actual GitHub username:
 2. Create three environments:
 
 #### **staging**
+
 - Name: `staging`
 - URL: `https://staging.yourdomain.com` (optional)
 - Protection rules: None (for now)
 
 #### **production**
-- Name: `production`  
+
+- Name: `production`
 - URL: `https://yourdomain.com` (optional)
 - Protection rules:
   - ✅ Required reviewers: 1
   - ✅ Wait timer: 5 minutes
 
 #### **frontend-production**
+
 - Name: `frontend-production`
 - URL: `https://app.yourdomain.com` (optional)
 - Protection rules: Same as production
@@ -82,21 +86,21 @@ Go to: **Settings** → **Secrets and variables** → **Actions** → **New repo
 
 Only add these when you're ready to deploy:
 
-| Secret Name | Value | When Needed |
-|-------------|-------|-------------|
+| Secret Name          | Value                            | When Needed       |
+| -------------------- | -------------------------------- | ----------------- |
 | `PRODUCTION_API_URL` | `https://api.yourdomain.com/api` | Production deploy |
-| `FIREBASE_TOKEN` | Run: `firebase login:ci` | Firebase deploy |
-| `NETLIFY_TOKEN` | From Netlify dashboard | Netlify deploy |
-| `CODECOV_TOKEN` | From codecov.io | Coverage reports |
+| `FIREBASE_TOKEN`     | Run: `firebase login:ci`         | Firebase deploy   |
+| `NETLIFY_TOKEN`      | From Netlify dashboard           | Netlify deploy    |
+| `CODECOV_TOKEN`      | From codecov.io                  | Coverage reports  |
 
 ### Optional Secrets
 
 Add these if you use these platforms:
 
-| Secret Name | Purpose |
-|-------------|---------|
-| `HEROKU_API_KEY` | Heroku deployment |
-| `RAILWAY_TOKEN` | Railway deployment |
+| Secret Name      | Purpose            |
+| ---------------- | ------------------ |
+| `HEROKU_API_KEY` | Heroku deployment  |
+| `RAILWAY_TOKEN`  | Railway deployment |
 
 ---
 
@@ -136,6 +140,7 @@ git push origin main
 ### On Every Push to `main` or `develop`:
 
 1. **Backend workflow runs:**
+
    - Tests with Python 3.11 and 3.12
    - Checks code formatting (Black, isort, flake8)
    - Runs security scans (Safety, Bandit)
@@ -143,6 +148,7 @@ git push origin main
    - **Deploys to production** (main) or **staging** (develop)
 
 2. **Frontend workflow runs:**
+
    - Tests Flutter code
    - Checks formatting (dart format)
    - Builds web app
@@ -158,6 +164,7 @@ git push origin main
 ### On Every Pull Request:
 
 1. **PR checks run:**
+
    - Validates PR title format
    - Auto-labels based on files
    - Adds size label (XS, S, M, L, XL)
@@ -202,6 +209,7 @@ git push origin main
 ### 3. Check Status Badges
 
 After workflows complete:
+
 1. View your README on GitHub
 2. Badges will show: ✅ passing or ❌ failing
 3. Click badges to see workflow details
@@ -213,6 +221,7 @@ After workflows complete:
 For complete details, see:
 
 - **`CI_CD_GUIDE.md`** - 900+ line comprehensive guide
+
   - All workflows explained
   - Setup instructions
   - Troubleshooting
@@ -236,7 +245,7 @@ Your CI/CD pipeline is **production-ready**. Here's what you have:
 ✅ **Automated deployments** (staging + production)  
 ✅ **Dependency updates** (weekly, automated)  
 ✅ **PR automation** (labeling, validation)  
-✅ **900+ lines of documentation**  
+✅ **900+ lines of documentation**
 
 ---
 
@@ -253,6 +262,7 @@ Your CI/CD pipeline is **production-ready**. Here's what you have:
 ## 💡 Pro Tips
 
 ### Tip 1: View Workflow Logs
+
 ```bash
 # Install GitHub CLI
 brew install gh
@@ -263,6 +273,7 @@ gh run view <run-id>
 ```
 
 ### Tip 2: Test Locally (Optional)
+
 ```bash
 # Install 'act' to run workflows locally
 brew install act
@@ -272,6 +283,7 @@ act -j test
 ```
 
 ### Tip 3: Disable Workflows Temporarily
+
 ```bash
 # Add to workflow file:
 on:
@@ -281,6 +293,7 @@ on:
 ```
 
 ### Tip 4: Skip CI on Commits
+
 ```bash
 # Add to commit message:
 git commit -m "docs: update readme [skip ci]"

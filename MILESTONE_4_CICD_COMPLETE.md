@@ -11,6 +11,7 @@ Successfully created a **comprehensive CI/CD pipeline** using GitHub Actions tha
 ### GitHub Actions Workflows (5 workflows)
 
 1. **`.github/workflows/backend-ci.yml`** - Backend CI/CD Pipeline
+
    - Test job (Python 3.11, 3.12 matrix)
    - Security scanning (Safety, Bandit)
    - Build & validation
@@ -18,6 +19,7 @@ Successfully created a **comprehensive CI/CD pipeline** using GitHub Actions tha
    - Deploy to production (main branch)
 
 2. **`.github/workflows/frontend-ci.yml`** - Frontend CI/CD Pipeline
+
    - Test job (Flutter analyze, format, tests)
    - Build web (development config)
    - Build Android APK
@@ -27,6 +29,7 @@ Successfully created a **comprehensive CI/CD pipeline** using GitHub Actions tha
    - Deploy to Play Store (disabled)
 
 3. **`.github/workflows/docker-build.yml`** - Docker Build & Push
+
    - Build multi-platform images (amd64, arm64)
    - Push to GitHub Container Registry
    - Auto-generate tags (branch, SHA, semver, latest)
@@ -35,6 +38,7 @@ Successfully created a **comprehensive CI/CD pipeline** using GitHub Actions tha
    - Deploy Docker image
 
 4. **`.github/workflows/dependency-updates.yml`** - Automated Dependency Updates
+
    - Update Python dependencies (weekly)
    - Update Flutter dependencies (weekly)
    - Security audit (Safety, Bandit)
@@ -56,6 +60,7 @@ Successfully created a **comprehensive CI/CD pipeline** using GitHub Actions tha
 ### Documentation
 
 7. **`CI_CD_GUIDE.md`** - Comprehensive CI/CD documentation (900+ lines)
+
    - Workflows overview
    - Backend CI/CD details
    - Frontend CI/CD details
@@ -126,12 +131,14 @@ Push/Tag → Build Image → Scan → Test → Deploy
 ## 🎯 Key Features
 
 ### 1. **Automated Testing**
+
 - ✅ Backend: pytest with coverage
 - ✅ Frontend: Flutter tests with coverage
 - ✅ Matrix testing (Python 3.11, 3.12)
 - ✅ Coverage upload to Codecov
 
 ### 2. **Code Quality**
+
 - ✅ Black - Code formatting
 - ✅ isort - Import sorting
 - ✅ flake8 - Linting
@@ -139,30 +146,35 @@ Push/Tag → Build Image → Scan → Test → Deploy
 - ✅ Dart format - Formatting
 
 ### 3. **Security Scanning**
+
 - ✅ Safety - Python vulnerability scanning
 - ✅ Bandit - Python security issues
 - ✅ Trivy - Docker vulnerability scanning
 - ✅ Upload to GitHub Security
 
 ### 4. **Multi-Platform Builds**
+
 - ✅ Web (Flutter web)
 - ✅ Android APK
 - ✅ iOS (configurable)
 - ✅ Docker (amd64 + arm64)
 
 ### 5. **Automated Deployments**
+
 - ✅ Staging (develop branch)
 - ✅ Production (main branch)
 - ✅ Environment-specific configs
 - ✅ Smoke tests after deployment
 
 ### 6. **Dependency Management**
+
 - ✅ Weekly automated updates
 - ✅ Auto-create PRs
 - ✅ Security audits
 - ✅ Test compatibility
 
 ### 7. **Pull Request Automation**
+
 - ✅ Auto-labeling by files changed
 - ✅ Size labeling (XS to XL)
 - ✅ Title format validation
@@ -170,6 +182,7 @@ Push/Tag → Build Image → Scan → Test → Deploy
 - ✅ Commit message linting
 
 ### 8. **Docker Integration**
+
 - ✅ Build and push images
 - ✅ Multi-platform support
 - ✅ Auto-tagging system
@@ -181,28 +194,33 @@ Push/Tag → Build Image → Scan → Test → Deploy
 ## 🏷️ Workflow Triggers
 
 ### Backend CI/CD
+
 ```yaml
 Trigger: Push to main/develop, PRs
 Paths: backend/**, requirements.txt, Dockerfile
 ```
 
 ### Frontend CI/CD
+
 ```yaml
 Trigger: Push to main/develop, PRs
 Paths: frontend/**, pubspec.yaml
 ```
 
 ### Docker Build
+
 ```yaml
 Trigger: Push to main/develop, tags (v*)
 ```
 
 ### Dependency Updates
+
 ```yaml
 Trigger: Every Monday at 9 AM UTC, manual dispatch
 ```
 
 ### PR Checks
+
 ```yaml
 Trigger: All pull requests
 ```
@@ -228,23 +246,23 @@ Added to `README.md`:
 
 ### Essential Secrets (for deployment)
 
-| Secret | Purpose | How to Get |
-|--------|---------|------------|
-| `PRODUCTION_API_URL` | Production API endpoint | Your API URL |
-| `FIREBASE_TOKEN` | Firebase deployment | `firebase login:ci` |
-| `NETLIFY_TOKEN` | Netlify deployment | Netlify dashboard |
-| `CODECOV_TOKEN` | Coverage reporting | codecov.io |
+| Secret               | Purpose                 | How to Get          |
+| -------------------- | ----------------------- | ------------------- |
+| `PRODUCTION_API_URL` | Production API endpoint | Your API URL        |
+| `FIREBASE_TOKEN`     | Firebase deployment     | `firebase login:ci` |
+| `NETLIFY_TOKEN`      | Netlify deployment      | Netlify dashboard   |
+| `CODECOV_TOKEN`      | Coverage reporting      | codecov.io          |
 
 ### Optional Secrets
 
-| Secret | Purpose |
-|--------|---------|
-| `HEROKU_API_KEY` | Heroku deployment |
-| `RAILWAY_TOKEN` | Railway deployment |
-| `DOCKER_USERNAME` | Docker Hub |
-| `DOCKER_PASSWORD` | Docker Hub |
-| `AWS_ACCESS_KEY_ID` | AWS deployment |
-| `AWS_SECRET_ACCESS_KEY` | AWS deployment |
+| Secret                  | Purpose            |
+| ----------------------- | ------------------ |
+| `HEROKU_API_KEY`        | Heroku deployment  |
+| `RAILWAY_TOKEN`         | Railway deployment |
+| `DOCKER_USERNAME`       | Docker Hub         |
+| `DOCKER_PASSWORD`       | Docker Hub         |
+| `AWS_ACCESS_KEY_ID`     | AWS deployment     |
+| `AWS_SECRET_ACCESS_KEY` | AWS deployment     |
 
 ---
 
@@ -272,33 +290,34 @@ Added to `README.md`:
 
 ### File-Based Labels
 
-| Label | Triggers On |
-|-------|-------------|
-| `backend` | backend/** |
-| `frontend` | frontend/** |
-| `documentation` | **.md, docs/** |
-| `ci-cd` | .github/workflows/** |
-| `docker` | Dockerfile, docker-compose.yml |
-| `dependencies` | requirements.txt, pubspec.yaml |
-| `configuration` | .env*, config/**, settings.py |
-| `tests` | test/**, tests/**, *_test.dart |
-| `security` | security/**, auth/** |
+| Label           | Triggers On                      |
+| --------------- | -------------------------------- |
+| `backend`       | backend/\*\*                     |
+| `frontend`      | frontend/\*\*                    |
+| `documentation` | **.md, docs/**                   |
+| `ci-cd`         | .github/workflows/\*\*           |
+| `docker`        | Dockerfile, docker-compose.yml   |
+| `dependencies`  | requirements.txt, pubspec.yaml   |
+| `configuration` | .env\*, config/\*\*, settings.py |
+| `tests`         | test/**, tests/**, \*\_test.dart |
+| `security`      | security/**, auth/**             |
 
 ### Size Labels
 
-| Label | Lines Changed |
-|-------|---------------|
-| `size/XS` | < 10 |
-| `size/S` | 10-100 |
-| `size/M` | 100-500 |
-| `size/L` | 500-1000 |
-| `size/XL` | > 1000 |
+| Label     | Lines Changed |
+| --------- | ------------- |
+| `size/XS` | < 10          |
+| `size/S`  | 10-100        |
+| `size/M`  | 100-500       |
+| `size/L`  | 500-1000      |
+| `size/XL` | > 1000        |
 
 ---
 
 ## 🧪 Testing Strategy
 
 ### Backend Tests
+
 ```bash
 # Run locally
 cd backend
@@ -310,6 +329,7 @@ codecov --token=$CODECOV_TOKEN
 ```
 
 ### Frontend Tests
+
 ```bash
 # Run locally
 cd frontend
@@ -321,6 +341,7 @@ codecov --token=$CODECOV_TOKEN
 ```
 
 ### Docker Tests
+
 ```bash
 # Test locally
 docker build -t test-image .
@@ -337,11 +358,13 @@ docker-compose -f docker-compose.yml config
 ### Vulnerability Scanning
 
 1. **Python Dependencies** (Safety)
+
    - Checks for known CVEs
    - Runs on every push
    - Uploads reports as artifacts
 
 2. **Python Code** (Bandit)
+
    - Scans for security issues
    - Detects common vulnerabilities
    - Uploads to GitHub Security
@@ -496,12 +519,14 @@ ci(workflows): add docker build workflow
 ### Created Documentation
 
 1. **CI_CD_GUIDE.md** (900+ lines)
+
    - Complete workflow documentation
    - Setup instructions
    - Troubleshooting guide
    - Advanced configurations
 
 2. **README.md** (updated)
+
    - Status badges
    - Quick start guide
    - Project overview
@@ -514,6 +539,7 @@ ci(workflows): add docker build workflow
 ## 🎯 What This Enables
 
 ### For Developers
+
 - ✅ Automated testing on every PR
 - ✅ Instant feedback on code quality
 - ✅ No manual deployment steps
@@ -521,6 +547,7 @@ ci(workflows): add docker build workflow
 - ✅ Easy rollback if issues occur
 
 ### For Team
+
 - ✅ Code review automation
 - ✅ Enforced code standards
 - ✅ Security vulnerability alerts
@@ -528,6 +555,7 @@ ci(workflows): add docker build workflow
 - ✅ Clear deployment history
 
 ### For Production
+
 - ✅ Automated deployments
 - ✅ Environment-specific configs
 - ✅ Smoke tests after deploy
@@ -567,7 +595,7 @@ ci(workflows): add docker build workflow
 ✅ **Auto-labeling** (files + size)  
 ✅ **Coverage reporting** (Codecov)  
 ✅ **Status badges** (README)  
-✅ **900+ lines of documentation**  
+✅ **900+ lines of documentation**
 
 ---
 

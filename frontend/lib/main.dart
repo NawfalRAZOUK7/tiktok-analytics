@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
               // Trigger rebuild when auth state changes
             },
           );
-          
+
           return MaterialApp.router(
             title: 'TikTok Analytics',
             debugShowCheckedModeBanner: false,

@@ -49,9 +49,10 @@ class Post {
       comments: json['comments'] as int?,
       shares: json['shares'] as int?,
       duration: json['duration'] as int?,
-      hashtags: json['hashtags'] != null
-          ? List<String>.from(json['hashtags'] as List)
-          : [],
+      hashtags:
+          json['hashtags'] != null
+              ? List<String>.from(json['hashtags'] as List)
+              : [],
       isPrivate: json['is_private'] as bool? ?? false,
       isPinned: json['is_pinned'] as bool? ?? false,
       engagementRatio: (json['engagement_ratio'] as num?)?.toDouble(),
@@ -165,9 +166,10 @@ class PostListResponse {
       count: json['count'] as int,
       next: json['next'] as String?,
       previous: json['previous'] as String?,
-      results: (json['results'] as List)
-          .map((post) => Post.fromJson(post as Map<String, dynamic>))
-          .toList(),
+      results:
+          (json['results'] as List)
+              .map((post) => Post.fromJson(post as Map<String, dynamic>))
+              .toList(),
     );
   }
 }

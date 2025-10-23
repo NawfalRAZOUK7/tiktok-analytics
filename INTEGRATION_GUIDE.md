@@ -34,17 +34,20 @@ This document explains how the Django backend and Flutter frontend are integrate
 All endpoints are under `/api/posts/` and follow REST conventions.
 
 ### Base URL
+
 - **Development**: `http://127.0.0.1:8000/api`
 - **Production**: Configure via environment variable `API_BASE_URL`
 
 ### Endpoints
 
 #### 1. List Posts
+
 ```
 GET /api/posts/
 ```
 
 **Query Parameters**:
+
 - `page` (int): Page number (default: 1)
 - `page_size` (int): Items per page (default: 20, max: 100)
 - `ordering` (string): Sort field (e.g., `-date`, `likes`, `-views`)
@@ -59,6 +62,7 @@ GET /api/posts/
 - `is_pinned` (bool): Filter pinned posts
 
 **Response**:
+
 ```json
 {
   "count": 100,
@@ -88,6 +92,7 @@ GET /api/posts/
 ```
 
 #### 2. Get Single Post
+
 ```
 GET /api/posts/{id}/
 ```
@@ -95,11 +100,13 @@ GET /api/posts/{id}/
 **Response**: Same as single post object above.
 
 #### 3. Create Post
+
 ```
 POST /api/posts/
 ```
 
 **Request Body**:
+
 ```json
 {
   "post_id": "video123",
@@ -119,22 +126,26 @@ POST /api/posts/
 ```
 
 #### 4. Update Post
+
 ```
 PUT /api/posts/{id}/
 PATCH /api/posts/{id}/
 ```
 
 #### 5. Delete Post
+
 ```
 DELETE /api/posts/{id}/
 ```
 
 #### 6. Import Posts (Bulk)
+
 ```
 POST /api/posts/import/
 ```
 
 **Request Body**:
+
 ```json
 {
   "posts": [
@@ -148,6 +159,7 @@ POST /api/posts/import/
 ```
 
 **Response**:
+
 ```json
 {
   "imported": 10,
@@ -157,11 +169,13 @@ POST /api/posts/import/
 ```
 
 #### 7. Statistics
+
 ```
 GET /api/posts/statistics/
 ```
 
 **Response**:
+
 ```json
 {
   "total_posts": 100,
@@ -177,11 +191,13 @@ GET /api/posts/statistics/
 ```
 
 #### 8. Insights
+
 ```
 GET /api/posts/insights/
 ```
 
 **Query Parameters**:
+
 - `insight_type` (string): Type of insight
   - `trends`: Engagement trends over time
   - `top_posts`: Top performing posts
@@ -189,6 +205,7 @@ GET /api/posts/insights/
   - `engagement`: Engagement patterns
 
 **Response** (varies by insight type):
+
 ```json
 {
   "insight_type": "trends",
@@ -240,6 +257,7 @@ class ApiService {
 ```
 
 **Features**:
+
 - Automatic authentication header injection
 - Timeout configuration (default: 30s)
 - Error handling with custom exceptions
@@ -250,6 +268,7 @@ class ApiService {
 Three main providers manage application state:
 
 #### AuthProvider
+
 ```dart
 class AuthProvider with ChangeNotifier {
   bool _isAuthenticated = false;
@@ -262,11 +281,12 @@ class AuthProvider with ChangeNotifier {
 ```
 
 #### PostProvider
+
 ```dart
 class PostProvider with ChangeNotifier {
   List<Post> _posts = [];
   PostStats? _stats;
-  
+
   Future<void> fetchPosts({bool refresh = false});
   Future<void> loadMore();
   void setFilters({String? search, String? sortBy, ...});
@@ -275,10 +295,11 @@ class PostProvider with ChangeNotifier {
 ```
 
 #### AnalyticsProvider
+
 ```dart
 class AnalyticsProvider with ChangeNotifier {
   AnalyticsData? _data;
-  
+
   Future<void> fetchAnalytics(String insightType);
   Future<void> fetchStatistics();
 }
@@ -316,12 +337,13 @@ class Post {
 ### 4. Screen Integration Examples
 
 #### Posts List Screen
+
 ```dart
 class PostListScreen extends StatefulWidget {
   @override
   Widget build(BuildContext context) {
     final postProvider = context.watch<PostProvider>();
-    
+
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () => postProvider.fetchPosts(refresh: true),
@@ -342,23 +364,24 @@ class PostListScreen extends StatefulWidget {
 ```
 
 #### Analytics Dashboard
+
 ```dart
 class AnalyticsDashboardScreen extends StatefulWidget {
   @override
   Widget build(BuildContext context) {
     final analyticsProvider = context.watch<AnalyticsProvider>();
-    
+
     return TabBarView(
       children: [
         // Trends tab
         TrendsChart(data: analyticsProvider.trendsData),
-        
+
         // Top posts tab
         TopPostsWidget(posts: analyticsProvider.topPosts),
-        
+
         // Keywords tab
         KeywordChart(data: analyticsProvider.keywordData),
-        
+
         // Engagement tab
         EngagementChart(data: analyticsProvider.engagementData),
       ],
@@ -370,6 +393,7 @@ class AnalyticsDashboardScreen extends StatefulWidget {
 ## Environment Configuration
 
 ### Backend (.env)
+
 ```env
 DEBUG=True
 SECRET_KEY=your-secret-key-here
@@ -379,13 +403,14 @@ CORS_ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
 ```
 
 ### Frontend (environment.dart)
+
 ```dart
 class Environment {
   static const String apiBaseUrl = String.fromEnvironment(
     'API_BASE_URL',
     defaultValue: 'http://127.0.0.1:8000/api',
   );
-  
+
   static const int apiTimeout = int.fromEnvironment(
     'API_TIMEOUT',
     defaultValue: 30,
@@ -419,6 +444,7 @@ CORS_ALLOW_CREDENTIALS = True
 ## Error Handling
 
 ### Backend Error Responses
+
 ```json
 {
   "detail": "Error message",
@@ -427,6 +453,7 @@ CORS_ALLOW_CREDENTIALS = True
 ```
 
 ### Frontend Error Handling
+
 ```dart
 try {
   final posts = await apiService.fetchPosts();
@@ -445,6 +472,7 @@ try {
 ## Testing Integration
 
 ### Backend API Tests
+
 ```python
 # backend/posts/tests/test_views.py
 def test_list_posts(self):
@@ -454,12 +482,13 @@ def test_list_posts(self):
 ```
 
 ### Frontend Integration Tests
+
 ```dart
 // frontend/test/integration/api_test.dart
 testWidgets('fetches posts from API', (tester) async {
   final apiService = ApiService();
   final response = await apiService.fetchPosts();
-  
+
   expect(response.results, isNotEmpty);
   expect(response.results.first, isA<Post>());
 });
@@ -468,6 +497,7 @@ testWidgets('fetches posts from API', (tester) async {
 ## Running the Full Stack
 
 ### 1. Start Backend
+
 ```bash
 cd backend
 source venv/bin/activate  # or venv\Scripts\activate on Windows
@@ -477,6 +507,7 @@ python manage.py runserver
 Server runs at: `http://127.0.0.1:8000`
 
 ### 2. Start Frontend
+
 ```bash
 cd frontend
 flutter pub get
@@ -484,6 +515,7 @@ flutter run -d chrome  # or your preferred device
 ```
 
 ### 3. Verify Integration
+
 1. Open Flutter app in browser/device
 2. Navigate to Posts screen
 3. Check that posts load from backend
@@ -494,6 +526,7 @@ flutter run -d chrome  # or your preferred device
 ## Deployment Considerations
 
 ### Backend Deployment
+
 - Set `DEBUG=False` in production
 - Use PostgreSQL instead of SQLite
 - Configure proper `ALLOWED_HOSTS`
@@ -503,6 +536,7 @@ flutter run -d chrome  # or your preferred device
 - Configure production CORS origins
 
 ### Frontend Deployment
+
 - Build for production: `flutter build web`
 - Configure production API endpoint
 - Enable caching for static assets
@@ -515,26 +549,33 @@ flutter run -d chrome  # or your preferred device
 ### Common Issues
 
 #### 1. CORS Errors
+
 **Problem**: Browser blocks API requests
 **Solution**: Ensure backend CORS settings include frontend origin
 
 #### 2. Connection Refused
+
 **Problem**: Flutter can't connect to backend
-**Solution**: 
+**Solution**:
+
 - Verify backend is running
 - Check API_BASE_URL in environment.dart
 - Ensure no firewall blocking port 8000
 
 #### 3. 401 Unauthorized
+
 **Problem**: API returns unauthorized error
 **Solution**:
+
 - Check authentication token is valid
 - Verify token is included in request headers
 - Re-authenticate if token expired
 
 #### 4. Slow API Responses
+
 **Problem**: API requests take too long
 **Solution**:
+
 - Add database indexes for frequently queried fields
 - Implement pagination (already done)
 - Use database query optimization

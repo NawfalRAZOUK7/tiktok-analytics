@@ -19,7 +19,8 @@ class AppRouter {
       initialLocation: '/',
       redirect: (context, state) {
         final authenticated = isAuthenticated();
-        final loggingIn = state.matchedLocation == '/login' ||
+        final loggingIn =
+            state.matchedLocation == '/login' ||
             state.matchedLocation == '/register';
 
         // Redirect to login if not authenticated and not already on login/register
@@ -81,7 +82,9 @@ class AppRouter {
                     return Scaffold(
                       appBar: AppBar(title: const Text('Error')),
                       body: const Center(
-                        child: Text('Post not found. Please go back and try again.'),
+                        child: Text(
+                          'Post not found. Please go back and try again.',
+                        ),
                       ),
                     );
                   },
@@ -98,32 +101,33 @@ class AppRouter {
           ],
         ),
       ],
-      errorBuilder: (context, state) => Scaffold(
-        appBar: AppBar(title: const Text('Error')),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.error_outline, size: 64, color: Colors.red),
-              const SizedBox(height: 16),
-              Text(
-                'Page not found',
-                style: Theme.of(context).textTheme.headlineSmall,
+      errorBuilder:
+          (context, state) => Scaffold(
+            appBar: AppBar(title: const Text('Error')),
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Page not found',
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    state.uri.toString(),
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  const SizedBox(height: 24),
+                  ElevatedButton(
+                    onPressed: () => context.go('/'),
+                    child: const Text('Go Home'),
+                  ),
+                ],
               ),
-              const SizedBox(height: 8),
-              Text(
-                state.uri.toString(),
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: () => context.go('/'),
-                child: const Text('Go Home'),
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
     );
   }
 }

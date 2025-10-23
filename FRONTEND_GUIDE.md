@@ -19,10 +19,12 @@ This Flutter application is a comprehensive TikTok Analytics dashboard that allo
 ## Technology Stack
 
 ### Core Dependencies
+
 - **Flutter SDK**: ^3.0.0
 - **Dart**: ^3.0.0
 
 ### Key Packages
+
 - **provider** (^6.0.0): State management solution
 - **go_router** (^14.0.0): Declarative routing with deep linking
 - **http** (^1.0.0): HTTP client for API requests
@@ -94,7 +96,7 @@ Routes are protected using a global redirect function that checks authentication
 ```dart
 redirect: (context, state) {
   final authenticated = isAuthenticated();
-  final loggingIn = state.matchedLocation == '/login' || 
+  final loggingIn = state.matchedLocation == '/login' ||
                      state.matchedLocation == '/register';
 
   // Redirect to login if not authenticated
@@ -156,7 +158,7 @@ Manages authentication state and user session.
 class AuthProvider extends ChangeNotifier {
   bool isAuthenticated;
   String? token;
-  
+
   Future<void> login(String username, String password);
   Future<void> logout();
   Future<void> register(String username, String email, String password);
@@ -164,6 +166,7 @@ class AuthProvider extends ChangeNotifier {
 ```
 
 **Usage:**
+
 ```dart
 // In widget
 final authProvider = context.watch<AuthProvider>();
@@ -185,13 +188,13 @@ class PostProvider extends ChangeNotifier {
   bool isLoading;
   String? error;
   PostStats? stats;
-  
+
   // Filters
   String? searchQuery;
   String sortBy;
   int? minLikes, maxLikes;
   int? minViews, maxViews;
-  
+
   Future<void> fetchPosts({bool refresh = false});
   Future<void> fetchStats();
   void setSearchQuery(String query);
@@ -203,6 +206,7 @@ class PostProvider extends ChangeNotifier {
 ```
 
 **Usage:**
+
 ```dart
 // Fetch posts
 await context.read<PostProvider>().fetchPosts(refresh: true);
@@ -228,10 +232,10 @@ class AnalyticsProvider extends ChangeNotifier {
   TrendsResponse? trends;
   InsightsResponse? insights;
   EngagementRatioResponse? engagementData;
-  
+
   bool trendsLoading, insightsLoading;
   String? trendsError, insightsError;
-  
+
   Future<void> fetchTrends();
   Future<void> fetchInsights();
   Future<void> fetchEngagement();
@@ -240,6 +244,7 @@ class AnalyticsProvider extends ChangeNotifier {
 ```
 
 **Usage:**
+
 ```dart
 // Fetch all analytics
 await context.read<AnalyticsProvider>().fetchAllAnalytics();
@@ -280,7 +285,7 @@ The `ApiService` class handles all HTTP requests to the backend API.
 class ApiService {
   final String baseUrl = Environment.apiBaseUrl; // From environment config
   final AuthService _authService;
-  
+
   Future<Map<String, String>> _getHeaders() async {
     final token = await _authService.getToken();
     return {
@@ -294,6 +299,7 @@ class ApiService {
 #### API Methods
 
 **Fetch Posts (with pagination and filters)**
+
 ```dart
 Future<PostListResponse> fetchPosts({
   int page = 1,
@@ -303,21 +309,25 @@ Future<PostListResponse> fetchPosts({
 ```
 
 **Fetch Single Post**
+
 ```dart
 Future<Post> fetchPost(int id);
 ```
 
 **Import Posts**
+
 ```dart
 Future<void> importPosts(List<Map<String, dynamic>> posts);
 ```
 
 **Fetch Statistics**
+
 ```dart
 Future<PostStats> fetchStatistics();
 ```
 
 **Fetch Insights**
+
 ```dart
 Future<InsightsResponse> fetchInsights();
 ```
@@ -346,7 +356,7 @@ Manages authentication tokens securely using `flutter_secure_storage`.
 ```dart
 class AuthService {
   final storage = FlutterSecureStorage();
-  
+
   Future<void> saveToken(String token);
   Future<String?> getToken();
   Future<void> deleteToken();
@@ -373,6 +383,7 @@ class Responsive {
 #### Usage Examples
 
 **Check Device Type**
+
 ```dart
 if (Responsive.isMobile(context)) {
   // Show mobile layout
@@ -384,6 +395,7 @@ if (Responsive.isMobile(context)) {
 ```
 
 **Responsive Grid**
+
 ```dart
 GridView.builder(
   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -398,6 +410,7 @@ GridView.builder(
 ```
 
 **Responsive Values**
+
 ```dart
 final fontSize = Responsive.getValue(
   context,
@@ -408,6 +421,7 @@ final fontSize = Responsive.getValue(
 ```
 
 **Extension Methods**
+
 ```dart
 // Using context extensions
 if (context.isMobile) {
@@ -525,6 +539,7 @@ flutter devices
 ### Hot Reload
 
 While running, press:
+
 - `r` to hot reload
 - `R` to hot restart
 - `q` to quit
@@ -589,7 +604,8 @@ While running, press:
 
 ### Issue: API Connection Failed
 
-**Solution**: 
+**Solution**:
+
 1. Check backend is running
 2. Verify `apiBaseUrl` in environment config
 3. For Android emulator, use `http://10.0.2.2:8000` instead of `localhost`
@@ -597,6 +613,7 @@ While running, press:
 ### Issue: Hot Reload Not Working
 
 **Solution**:
+
 1. Try hot restart (`R`)
 2. Restart the app
 3. Clean build: `flutter clean && flutter pub get`
@@ -604,6 +621,7 @@ While running, press:
 ### Issue: Widget Tests Failing
 
 **Solution**:
+
 1. Ensure test data is consistent
 2. Use `await tester.pump()` after interactions
 3. Check widget tree structure with `tester.widget<Type>(find...)`

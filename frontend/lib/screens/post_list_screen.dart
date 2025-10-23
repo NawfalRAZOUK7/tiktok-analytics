@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
 import '../models/post.dart';
 import '../providers/post_provider.dart';
 
@@ -21,7 +22,7 @@ class _PostListScreenState extends State<PostListScreen> {
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
-    
+
     // Fetch initial data
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final provider = context.read<PostProvider>();
@@ -75,18 +76,17 @@ class _PostListScreenState extends State<PostListScreen> {
         decoration: InputDecoration(
           hintText: 'Search posts, IDs, hashtags...',
           prefixIcon: const Icon(Icons.search),
-          suffixIcon: _searchController.text.isNotEmpty
-              ? IconButton(
-                  icon: const Icon(Icons.clear),
-                  onPressed: () {
-                    _searchController.clear();
-                    context.read<PostProvider>().setSearchQuery('');
-                  },
-                )
-              : null,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
+          suffixIcon:
+              _searchController.text.isNotEmpty
+                  ? IconButton(
+                    icon: const Icon(Icons.clear),
+                    onPressed: () {
+                      _searchController.clear();
+                      context.read<PostProvider>().setSearchQuery('');
+                    },
+                  )
+                  : null,
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         ),
         onSubmitted: (value) {
           context.read<PostProvider>().setSearchQuery(value);
@@ -153,17 +153,11 @@ class _PostListScreenState extends State<PostListScreen> {
       children: [
         Text(
           value,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         Text(
           label,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey.shade600,
-          ),
+          style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
         ),
       ],
     );
@@ -241,28 +235,31 @@ class _PostListScreenState extends State<PostListScreen> {
               // Cover Image
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: post.coverUrl != null
-                    ? CachedNetworkImage(
-                        imageUrl: post.coverUrl!,
-                        width: 80,
-                        height: 80,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) =>
-                            const Center(child: CircularProgressIndicator()),
-                        errorWidget: (context, url, error) =>
-                            Container(
-                              width: 80,
-                              height: 80,
-                              color: Colors.grey.shade300,
-                              child: const Icon(Icons.image_not_supported),
-                            ),
-                      )
-                    : Container(
-                        width: 80,
-                        height: 80,
-                        color: Colors.grey.shade300,
-                        child: const Icon(Icons.video_library),
-                      ),
+                child:
+                    post.coverUrl != null
+                        ? CachedNetworkImage(
+                          imageUrl: post.coverUrl!,
+                          width: 80,
+                          height: 80,
+                          fit: BoxFit.cover,
+                          placeholder:
+                              (context, url) => const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                          errorWidget:
+                              (context, url, error) => Container(
+                                width: 80,
+                                height: 80,
+                                color: Colors.grey.shade300,
+                                child: const Icon(Icons.image_not_supported),
+                              ),
+                        )
+                        : Container(
+                          width: 80,
+                          height: 80,
+                          color: Colors.grey.shade300,
+                          child: const Icon(Icons.video_library),
+                        ),
               ),
               const SizedBox(width: 12),
 
@@ -292,7 +289,11 @@ class _PostListScreenState extends State<PostListScreen> {
                         Text(post.formattedViews),
                         if (post.isPinned) ...[
                           const SizedBox(width: 16),
-                          const Icon(Icons.push_pin, size: 16, color: Colors.blue),
+                          const Icon(
+                            Icons.push_pin,
+                            size: 16,
+                            color: Colors.blue,
+                          ),
                         ],
                       ],
                     ),
@@ -366,10 +367,7 @@ class _PostListScreenState extends State<PostListScreen> {
   }
 
   void _showFilterDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => const FilterDialog(),
-    );
+    showDialog(context: context, builder: (context) => const FilterDialog());
   }
 }
 
