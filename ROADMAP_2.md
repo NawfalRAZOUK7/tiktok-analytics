@@ -31,13 +31,13 @@
 
 ### 5.2 Backend - Import de Données
 
-- [ ] **Étendre commande `import_tiktok_json`**
+- [x] **Étendre commande `import_tiktok_json`** ✅
 
-  - Parser section `Follower.FansList` du JSON
-  - Parser section `Following.Following` du JSON
-  - Import en bulk pour performance (>3000 entrées)
-  - Validation: vérifier format UserName et Date
-  - Logging détaillé du nombre d'imports réussis/échoués
+  - Parser section `Follower.FansList` du JSON ✅
+  - Parser section `Following.Following` du JSON ✅
+  - Import en bulk pour performance (>3000 entrées) ✅
+  - Validation: vérifier format UserName et Date ✅
+  - Logging détaillé du nombre d'imports réussis/échoués ✅
 
 - [ ] **Créer commande `import_followers_history`**
   - Importer plusieurs exports à différentes dates
