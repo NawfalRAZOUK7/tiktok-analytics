@@ -39,10 +39,10 @@
   - Validation: vérifier format UserName et Date ✅
   - Logging détaillé du nombre d'imports réussis/échoués ✅
 
-- [ ] **Créer commande `import_followers_history`**
-  - Importer plusieurs exports à différentes dates
-  - Créer des snapshots historiques
-  - Détecter followers gagnés/perdus entre dates
+- [x] **Créer commande `import_followers_history`** ✅
+  - Importer plusieurs exports à différentes dates ✅
+  - Créer des snapshots historiques ✅
+  - Détecter followers gagnés/perdus entre dates ✅
 
 ### 5.3 Backend - API Endpoints
 
