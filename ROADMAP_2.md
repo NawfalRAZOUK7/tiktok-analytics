@@ -156,8 +156,8 @@
   - Tests algorithmes de comparaison (intersection, différence) ✅
   - Tests performance (import >3000 entrées) ✅
 
-- [ ] **Tests Frontend**
-  - Widget tests pour FollowerCard
+- [ ] **Tests Frontend** (en cours)
+  - Widget tests pour FollowerCard ✅ (17 tests)
   - Tests écrans followers/following
   - Tests comparaison (mutuals, distincts)
   - Tests recherche et filtres
