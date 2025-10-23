@@ -628,4 +628,4 @@ For more information, see:
 - [Django Testing Documentation](https://docs.djangoproject.com/en/stable/topics/testing/)
 - [pytest Documentation](https://docs.pytest.org/)
 - [pytest-django Documentation](https://pytest-django.readthedocs.io/)
-- [CI/CD Guide](./CI_CD_GUIDE.md)
+- [CI/CD Guide](../guides/CI_CD_GUIDE.md)

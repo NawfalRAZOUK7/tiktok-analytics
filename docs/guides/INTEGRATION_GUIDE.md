@@ -600,7 +600,7 @@ flutter run -d chrome  # or your preferred device
 - **Admin Panel**: http://127.0.0.1:8000/admin/
 - **API Documentation**: http://127.0.0.1:8000/api/docs/ (if configured)
 - **Frontend Guide**: [FRONTEND_GUIDE.md](./FRONTEND_GUIDE.md)
-- **Backend Testing Guide**: [BACKEND_TESTING_GUIDE.md](./BACKEND_TESTING_GUIDE.md)
+- **Backend Testing Guide**: [BACKEND_TESTING_GUIDE.md](../testing/BACKEND_TESTING_GUIDE.md)
 
 ## Next Steps
 
