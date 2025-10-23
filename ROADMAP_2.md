@@ -12,19 +12,19 @@
 
 **Objectif**: Importer et stocker les données de followers et following depuis TikTok export JSON
 
-- [ ] **Créer modèle `Follower`**
+- [x] **Créer modèle `Follower`** ✅
 
   - Champs: `username`, `date_followed`, `user` (FK vers User), `created_at`
   - Index sur username pour recherche rapide
   - Contrainte unique: (user, username)
 
-- [ ] **Créer modèle `Following`**
+- [x] **Créer modèle `Following`** ✅
 
   - Champs: `username`, `date_followed`, `user` (FK vers User), `created_at`
   - Index sur username pour recherche rapide
   - Contrainte unique: (user, username)
 
-- [ ] **Créer modèle `FollowerSnapshot`**
+- [x] **Créer modèle `FollowerSnapshot`** ✅
   - Suivi historique des followers
   - Champs: `user`, `snapshot_date`, `follower_count`, `following_count`
   - Permet de tracker l'évolution dans le temps
