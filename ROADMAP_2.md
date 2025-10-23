@@ -130,10 +130,13 @@
   - Action: ouvrir profil TikTok (url_launcher) ✅
   - 3 factory constructors (fromFollower, fromFollowing, fromComparison) ✅
 
-- [ ] **FollowerComparisonChart** - Graphique comparaison
+- [x] **FollowerComparisonChart** - Graphique comparaison ✅
 
-  - Diagramme de Venn (Followers, Following, Mutuals)
-  - Graphique en barres pour proportions
+  - Diagramme de Venn (Followers, Following, Mutuals) ✅
+  - Graphique en barres pour proportions ✅
+  - Toggle entre les deux modes de visualisation ✅
+  - Animations fluides ✅
+  - Légende interactive ✅
 
 - [ ] **FollowerGrowthChart** - Graphique croissance
   - Line chart avec fl_chart

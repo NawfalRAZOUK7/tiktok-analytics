@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../models/follower.dart';
 import '../providers/follower_provider.dart';
 import '../widgets/follower_card.dart';
+import '../widgets/follower_comparison_chart.dart';
 
 /// Screen for analyzing followers/following with statistics and comparisons
 class FollowersAnalysisScreen extends StatefulWidget {
@@ -209,6 +210,11 @@ class _FollowersAnalysisScreenState extends State<FollowersAnalysisScreen>
                   ),
                 ],
               ),
+
+              const SizedBox(height: 16),
+
+              // Comparison Chart
+              FollowerComparisonChart(stats: stats),
 
               const SizedBox(height: 16),
 
