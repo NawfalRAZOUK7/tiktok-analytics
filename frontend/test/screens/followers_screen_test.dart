@@ -45,7 +45,9 @@ void main() {
       expect(find.byIcon(Icons.search), findsOneWidget);
     });
 
-    testWidgets('search field updates on text input', (WidgetTester tester) async {
+    testWidgets('search field updates on text input', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(createTestWidget());
       await tester.pump();
 
