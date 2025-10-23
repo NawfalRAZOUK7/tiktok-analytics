@@ -77,15 +77,20 @@ def api_client():
 
 
 @pytest.fixture
-def authenticated_client(api_client, django_user_model):
-    """Authenticated API client."""
-    from rest_framework.authtoken.models import Token
-    
-    user = django_user_model.objects.create_user(
+def user(django_user_model):
+    """Create a test user."""
+    return django_user_model.objects.create_user(
         username='testuser',
         email='test@example.com',
         password='testpass123'
     )
+
+
+@pytest.fixture
+def authenticated_client(api_client, user):
+    """Authenticated API client."""
+    from rest_framework.authtoken.models import Token
+    
     token, created = Token.objects.get_or_create(user=user)
     api_client.credentials(HTTP_AUTHORIZATION=f'Token {token.key}')
     api_client.user = user
