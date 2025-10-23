@@ -148,13 +148,13 @@
 
 ### 5.6 Tests
 
-- [ ] **Tests Backend**
+- [x] **Tests Backend** ✅
 
-  - Tests modèles Follower/Following
-  - Tests import JSON (Follower.FansList, Following.Following)
-  - Tests endpoints API (CRUD, stats, comparaisons)
-  - Tests algorithmes de comparaison (intersection, différence)
-  - Tests performance (import >3000 entrées)
+  - Tests modèles Follower/Following ✅ (20 tests)
+  - Tests import JSON (Follower.FansList, Following.Following) ✅ (9 tests)
+  - Tests endpoints API (CRUD, stats, comparaisons) ✅ (18 tests)
+  - Tests algorithmes de comparaison (intersection, différence) ✅
+  - Tests performance (import >3000 entrées) ✅
 
 - [ ] **Tests Frontend**
   - Widget tests pour FollowerCard
