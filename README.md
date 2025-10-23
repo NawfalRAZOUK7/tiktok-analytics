@@ -186,11 +186,13 @@ See [ROADMAP.md](./ROADMAP.md) for detailed milestones and future tasks.
 ## 📝 Documentation
 
 ### Core Documentation
+
 - [ROADMAP](./ROADMAP.md) — Development plan and milestones
 - [Backend README](./backend/README.md) — Django-specific setup and API
 - [Frontend README](./frontend/README.md) — Flutter-specific setup and structure
 
 ### Guides
+
 - [CI/CD Guide](./docs/guides/CI_CD_GUIDE.md) — GitHub Actions workflows and automation
 - [Integration Guide](./docs/guides/INTEGRATION_GUIDE.md) — Backend-Frontend integration
 - [Frontend Guide](./docs/guides/FRONTEND_GUIDE.md) — Flutter development patterns
@@ -198,15 +200,18 @@ See [ROADMAP.md](./ROADMAP.md) for detailed milestones and future tasks.
 - [GitHub Setup](./docs/guides/GITHUB_SETUP.md) — Repository configuration
 
 ### Testing
+
 - [Testing Guide](./docs/testing/TESTING_GUIDE.md) — Comprehensive testing documentation
 - [Backend Testing](./docs/testing/BACKEND_TESTING_GUIDE.md) — Django/pytest testing
 
 ### Deployment
+
 - [Deployment Checklist](./docs/deployment/DEPLOYMENT_CHECKLIST.md) — Pre-deployment tasks
 - [Quick Connect](./docs/deployment/CONNECT_NOW.md) — Quick deployment guide
 - [Deployment Setup](/.github/DEPLOYMENT_SETUP.md) — GitHub Actions deployment config
 
 ### Milestones (Historical)
+
 - [Milestone 0](./docs/milestones/MILESTONE_0_COMPLETE.md) — Foundations
 - [Milestone 1](./docs/milestones/MILESTONE_1_COMPLETE.md) — Data Ingest
 - [Milestone 2](./docs/milestones/MILESTONE_2_COMPLETE.md) — Browse Frontend
