@@ -138,10 +138,13 @@
   - Animations fluides ✅
   - Légende interactive ✅
 
-- [ ] **FollowerGrowthChart** - Graphique croissance
-  - Line chart avec fl_chart
-  - Évolution followers/following dans le temps
-  - Marqueurs pour dates importantes
+- [x] **FollowerGrowthChart** - Graphique croissance ✅
+  - Line chart avec fl_chart ✅
+  - Évolution followers/following dans le temps ✅
+  - Marqueurs pour dates importantes ✅
+  - Toggle weekly/monthly view ✅
+  - Tooltips interactifs ✅
+  - Légende avec statistiques (total, average, best, worst) ✅
 
 ### 5.6 Tests
 

@@ -6,6 +6,7 @@ import '../models/follower.dart';
 import '../providers/follower_provider.dart';
 import '../widgets/follower_card.dart';
 import '../widgets/follower_comparison_chart.dart';
+import '../widgets/follower_growth_chart.dart';
 
 /// Screen for analyzing followers/following with statistics and comparisons
 class FollowersAnalysisScreen extends StatefulWidget {
@@ -215,6 +216,17 @@ class _FollowersAnalysisScreenState extends State<FollowersAnalysisScreen>
 
               // Comparison Chart
               FollowerComparisonChart(stats: stats),
+
+              const SizedBox(height: 16),
+
+              // Growth Chart
+              if (stats.weeklyGrowth.isNotEmpty || stats.monthlyGrowth.isNotEmpty)
+                FollowerGrowthChart(
+                  weeklyGrowth: stats.weeklyGrowth,
+                  monthlyGrowth: stats.monthlyGrowth,
+                  title: 'Follower Growth Trend',
+                  primaryColor: Colors.blue,
+                ),
 
               const SizedBox(height: 16),
 

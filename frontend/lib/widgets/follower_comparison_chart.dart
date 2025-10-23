@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'dart:math' as math;
+
+import 'package:flutter/material.dart';
 
 import '../models/follower.dart';
 
@@ -8,11 +9,8 @@ class FollowerComparisonChart extends StatefulWidget {
   final FollowerStats stats;
   final VoidCallback? onTap;
 
-  const FollowerComparisonChart({
-    Key? key,
-    required this.stats,
-    this.onTap,
-  }) : super(key: key);
+  const FollowerComparisonChart({Key? key, required this.stats, this.onTap})
+    : super(key: key);
 
   @override
   State<FollowerComparisonChart> createState() =>
@@ -66,27 +64,26 @@ class _FollowerComparisonChartState extends State<FollowerComparisonChart>
               children: [
                 Text(
                   'Followers Comparison',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 IconButton(
                   icon: Icon(
                     _showVennDiagram ? Icons.bar_chart : Icons.bubble_chart,
                   ),
                   onPressed: _toggleChartType,
-                  tooltip: _showVennDiagram
-                      ? 'Switch to Bar Chart'
-                      : 'Switch to Venn Diagram',
+                  tooltip:
+                      _showVennDiagram
+                          ? 'Switch to Bar Chart'
+                          : 'Switch to Venn Diagram',
                 ),
               ],
             ),
             const SizedBox(height: 24),
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 300),
-              child: _showVennDiagram
-                  ? _buildVennDiagram()
-                  : _buildBarChart(),
+              child: _showVennDiagram ? _buildVennDiagram() : _buildBarChart(),
             ),
             const SizedBox(height: 24),
             _buildLegend(),
@@ -143,10 +140,7 @@ class _FollowerComparisonChartState extends State<FollowerComparisonChart>
                     ),
                     const Text(
                       'Mutuals',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.white,
-                      ),
+                      style: TextStyle(fontSize: 14, color: Colors.white),
                     ),
                   ],
                 ),
@@ -208,15 +202,15 @@ class _FollowerComparisonChartState extends State<FollowerComparisonChart>
               children: [
                 Text(
                   label,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w500,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
                 ),
                 Text(
                   '$count (${percent.toStringAsFixed(1)}%)',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.grey[600],
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
                 ),
               ],
             ),
@@ -245,11 +239,7 @@ class _FollowerComparisonChartState extends State<FollowerComparisonChart>
           Colors.blue,
           widget.stats.followersOnlyCount,
         ),
-        _buildLegendItem(
-          'Mutuals',
-          Colors.purple,
-          widget.stats.mutualsCount,
-        ),
+        _buildLegendItem('Mutuals', Colors.purple, widget.stats.mutualsCount),
         _buildLegendItem(
           'Following Only',
           Colors.green,
@@ -317,30 +307,34 @@ class VennDiagramPainter extends CustomPainter {
     final rightCircleCenter = Offset(center.dx + overlap, center.dy);
 
     // Draw followers circle (left - blue)
-    final followersPaint = Paint()
-      ..color = Colors.blue.withOpacity(0.4)
-      ..style = PaintingStyle.fill;
+    final followersPaint =
+        Paint()
+          ..color = Colors.blue.withOpacity(0.4)
+          ..style = PaintingStyle.fill;
     canvas.drawCircle(leftCircleCenter, radius, followersPaint);
 
     // Draw followers border
-    final followersBorderPaint = Paint()
-      ..color = Colors.blue
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2;
+    final followersBorderPaint =
+        Paint()
+          ..color = Colors.blue
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2;
     canvas.drawCircle(leftCircleCenter, radius, followersBorderPaint);
 
     // Draw following circle (right - green)
-    final followingPaint = Paint()
-      ..color = Colors.green.withOpacity(0.4)
-      ..style = PaintingStyle.fill
-      ..blendMode = BlendMode.multiply;
+    final followingPaint =
+        Paint()
+          ..color = Colors.green.withOpacity(0.4)
+          ..style = PaintingStyle.fill
+          ..blendMode = BlendMode.multiply;
     canvas.drawCircle(rightCircleCenter, radius, followingPaint);
 
     // Draw following border
-    final followingBorderPaint = Paint()
-      ..color = Colors.green
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2;
+    final followingBorderPaint =
+        Paint()
+          ..color = Colors.green
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2;
     canvas.drawCircle(rightCircleCenter, radius, followingBorderPaint);
 
     // Draw labels
