@@ -201,9 +201,9 @@ jobs:
     needs: [test, security, build]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     # Uncomment and configure environment in GitHub Settings → Environments
-    # environment:
-    #   name: production
-    #   url: https://yourdomain.com
+# environment:
+#   name: production
+#   url: https://yourdomain.com
 
     steps:
       - name: Checkout code
