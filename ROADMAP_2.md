@@ -87,47 +87,48 @@
 
 ### 5.4 Frontend - Écrans Followers/Following
 
-- [ ] **FollowersScreen** - Écran liste followers
+- [x] **FollowersScreen** - Écran liste followers ✅
 
-  - Liste avec pull-to-refresh
-  - Barre de recherche avec debouncing
-  - Filtres: date range, ordre alphabétique
-  - Indicateur si mutual (follower + following)
-  - Skeleton loader pendant chargement
+  - Liste avec pull-to-refresh ✅
+  - Barre de recherche avec debouncing (500ms) ✅
+  - Filtres: date range, ordre alphabétique ✅
+  - Indicateur si mutual (follower + following) ✅
+  - Skeleton loader pendant chargement ✅
 
-- [ ] **FollowingScreen** - Écran liste following
+- [x] **FollowingScreen** - Écran liste following ✅
 
-  - Même structure que FollowersScreen
-  - Mise en évidence des mutuals
+  - Même structure que FollowersScreen ✅
+  - Mise en évidence des mutuals ✅
 
-- [ ] **FollowersAnalysisScreen** - Écran d'analyse
+- [x] **FollowersAnalysisScreen** - Écran d'analyse ✅
 
-  - **Section Statistiques**:
+  - **Section Statistiques**: ✅
 
-    - Cartes: Total followers, Total following, Mutuals, Ratio
-    - Graphique croissance dans le temps
+    - Cartes: Total followers, Total following, Mutuals, Ratio ✅
+    - Graphique croissance dans le temps ✅
 
-  - **Section Comparaison**:
+  - **Section Comparaison**: ✅
 
-    - Onglet "Mutuals" (communs)
-    - Onglet "Followers uniquement"
-    - Onglet "Following uniquement"
-    - Export CSV de chaque catégorie
+    - Onglet "Mutuals" (communs) ✅
+    - Onglet "Followers uniquement" ✅
+    - Onglet "Following uniquement" ✅
+    - Export CSV de chaque catégorie (TODO)
 
-  - **Section Insights**:
-    - Dates avec plus d'acquisitions
-    - Suggestions: qui unfollow, qui ne vous suit pas
-    - Graphique engagement vs followers
+  - **Section Insights**: ✅
+    - Dates avec plus d'acquisitions ✅
+    - Suggestions: qui unfollow, qui ne vous suit pas ✅
+    - Graphique engagement vs followers (TODO)
 
 ### 5.5 Frontend - Widgets & Composants
 
-- [ ] **FollowerCard** - Widget pour afficher un follower
+- [x] **FollowerCard** - Widget pour afficher un follower ✅
 
-  - Avatar placeholder
-  - Username
-  - Date followed
-  - Badge "Mutual" si applicable
-  - Action: ouvrir profil TikTok
+  - Avatar placeholder (première lettre du username) ✅
+  - Username avec @prefix ✅
+  - Date followed formatée ✅
+  - Badge "Mutual" si applicable (vert avec icône) ✅
+  - Action: ouvrir profil TikTok (url_launcher) ✅
+  - 3 factory constructors (fromFollower, fromFollowing, fromComparison) ✅
 
 - [ ] **FollowerComparisonChart** - Graphique comparaison
 

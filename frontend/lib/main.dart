@@ -5,6 +5,7 @@ import 'config/environment.dart';
 import 'config/router.dart';
 import 'providers/analytics_provider.dart';
 import 'providers/auth_provider.dart';
+import 'providers/follower_provider.dart';
 import 'providers/post_provider.dart';
 import 'services/api_service.dart';
 import 'services/auth_service.dart';
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => AnalyticsProvider(apiService),
         ),
+        ChangeNotifierProvider(create: (context) => FollowerProvider()),
       ],
       child: Consumer<AuthProvider>(
         builder: (context, authProvider, child) {

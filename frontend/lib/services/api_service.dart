@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 
 import '../config/environment.dart';
 import '../models/analytics.dart';
+import '../models/follower.dart';
 import '../models/post.dart';
 import 'auth_service.dart';
 
@@ -261,5 +262,286 @@ class ApiService {
     } catch (e) {
       throw Exception('Network error: $e');
     }
+  }
+
+  // ============================================
+  // Followers/Following Endpoints
+  // ============================================
+
+  /// Fetch paginated list of followers
+  Future<FollowerListResponse> fetchFollowers({
+    int page = 1,
+    int pageSize = 100,
+    String? ordering,
+    String? search,
+    DateTime? dateFrom,
+    DateTime? dateTo,
+  }) async {
+    final queryParams = <String, String>{
+      'page': page.toString(),
+      'page_size': pageSize.toString(),
+    };
+
+    if (ordering != null) queryParams['ordering'] = ordering;
+    if (search != null && search.isNotEmpty) queryParams['search'] = search;
+    if (dateFrom != null) {
+      queryParams['date_followed__gte'] = dateFrom.toIso8601String();
+    }
+    if (dateTo != null) {
+      queryParams['date_followed__lte'] = dateTo.toIso8601String();
+    }
+
+    final uri = Uri.parse(
+      '$baseUrl/api/followers/',
+    ).replace(queryParameters: queryParams);
+
+    try {
+      final headers = await _getHeaders();
+      final response = await http.get(uri, headers: headers).timeout(timeout);
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body) as Map<String, dynamic>;
+        return FollowerListResponse.fromJson(data);
+      } else {
+        throw Exception('Failed to load followers: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Network error: $e');
+    }
+  }
+
+  /// Fetch paginated list of following
+  Future<FollowingListResponse> fetchFollowing({
+    int page = 1,
+    int pageSize = 100,
+    String? ordering,
+    String? search,
+    DateTime? dateFrom,
+    DateTime? dateTo,
+  }) async {
+    final queryParams = <String, String>{
+      'page': page.toString(),
+      'page_size': pageSize.toString(),
+    };
+
+    if (ordering != null) queryParams['ordering'] = ordering;
+    if (search != null && search.isNotEmpty) queryParams['search'] = search;
+    if (dateFrom != null) {
+      queryParams['date_followed__gte'] = dateFrom.toIso8601String();
+    }
+    if (dateTo != null) {
+      queryParams['date_followed__lte'] = dateTo.toIso8601String();
+    }
+
+    final uri = Uri.parse(
+      '$baseUrl/api/following/',
+    ).replace(queryParameters: queryParams);
+
+    try {
+      final headers = await _getHeaders();
+      final response = await http.get(uri, headers: headers).timeout(timeout);
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body) as Map<String, dynamic>;
+        return FollowingListResponse.fromJson(data);
+      } else {
+        throw Exception('Failed to load following: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Network error: $e');
+    }
+  }
+
+  /// Fetch follower statistics
+  Future<FollowerStats> fetchFollowerStats() async {
+    final uri = Uri.parse('$baseUrl/api/followers/stats/');
+
+    try {
+      final headers = await _getHeaders();
+      final response = await http.get(uri, headers: headers).timeout(timeout);
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body) as Map<String, dynamic>;
+        return FollowerStats.fromJson(data);
+      } else {
+        throw Exception(
+          'Failed to load follower stats: ${response.statusCode}',
+        );
+      }
+    } catch (e) {
+      throw Exception('Network error: $e');
+    }
+  }
+
+  /// Fetch mutuals (common followers/following)
+  Future<FollowerComparisonListResponse> fetchMutuals({
+    int page = 1,
+    int pageSize = 100,
+  }) async {
+    final queryParams = <String, String>{
+      'page': page.toString(),
+      'page_size': pageSize.toString(),
+    };
+
+    final uri = Uri.parse(
+      '$baseUrl/api/followers/common/',
+    ).replace(queryParameters: queryParams);
+
+    try {
+      final headers = await _getHeaders();
+      final response = await http.get(uri, headers: headers).timeout(timeout);
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body) as Map<String, dynamic>;
+        return FollowerComparisonListResponse.fromJson(data);
+      } else {
+        throw Exception('Failed to load mutuals: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Network error: $e');
+    }
+  }
+
+  /// Fetch followers-only (non-reciprocal followers)
+  Future<FollowerComparisonListResponse> fetchFollowersOnly({
+    int page = 1,
+    int pageSize = 100,
+  }) async {
+    final queryParams = <String, String>{
+      'page': page.toString(),
+      'page_size': pageSize.toString(),
+    };
+
+    final uri = Uri.parse(
+      '$baseUrl/api/followers/followers-only/',
+    ).replace(queryParameters: queryParams);
+
+    try {
+      final headers = await _getHeaders();
+      final response = await http.get(uri, headers: headers).timeout(timeout);
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body) as Map<String, dynamic>;
+        return FollowerComparisonListResponse.fromJson(data);
+      } else {
+        throw Exception(
+          'Failed to load followers-only: ${response.statusCode}',
+        );
+      }
+    } catch (e) {
+      throw Exception('Network error: $e');
+    }
+  }
+
+  /// Fetch following-only (non-reciprocal following)
+  Future<FollowerComparisonListResponse> fetchFollowingOnly({
+    int page = 1,
+    int pageSize = 100,
+  }) async {
+    final queryParams = <String, String>{
+      'page': page.toString(),
+      'page_size': pageSize.toString(),
+    };
+
+    final uri = Uri.parse(
+      '$baseUrl/api/followers/following-only/',
+    ).replace(queryParameters: queryParams);
+
+    try {
+      final headers = await _getHeaders();
+      final response = await http.get(uri, headers: headers).timeout(timeout);
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body) as Map<String, dynamic>;
+        return FollowerComparisonListResponse.fromJson(data);
+      } else {
+        throw Exception(
+          'Failed to load following-only: ${response.statusCode}',
+        );
+      }
+    } catch (e) {
+      throw Exception('Network error: $e');
+    }
+  }
+}
+
+/// Paginated response for followers list
+class FollowerListResponse {
+  final int count;
+  final String? next;
+  final String? previous;
+  final List<Follower> results;
+
+  FollowerListResponse({
+    required this.count,
+    this.next,
+    this.previous,
+    required this.results,
+  });
+
+  factory FollowerListResponse.fromJson(Map<String, dynamic> json) {
+    return FollowerListResponse(
+      count: json['count'] as int,
+      next: json['next'] as String?,
+      previous: json['previous'] as String?,
+      results:
+          (json['results'] as List)
+              .map((follower) => Follower.fromJson(follower))
+              .toList(),
+    );
+  }
+}
+
+/// Paginated response for following list
+class FollowingListResponse {
+  final int count;
+  final String? next;
+  final String? previous;
+  final List<Following> results;
+
+  FollowingListResponse({
+    required this.count,
+    this.next,
+    this.previous,
+    required this.results,
+  });
+
+  factory FollowingListResponse.fromJson(Map<String, dynamic> json) {
+    return FollowingListResponse(
+      count: json['count'] as int,
+      next: json['next'] as String?,
+      previous: json['previous'] as String?,
+      results:
+          (json['results'] as List)
+              .map((following) => Following.fromJson(following))
+              .toList(),
+    );
+  }
+}
+
+/// Paginated response for follower comparison (mutuals, distinct)
+class FollowerComparisonListResponse {
+  final int count;
+  final String? next;
+  final String? previous;
+  final List<FollowerComparison> results;
+
+  FollowerComparisonListResponse({
+    required this.count,
+    this.next,
+    this.previous,
+    required this.results,
+  });
+
+  factory FollowerComparisonListResponse.fromJson(Map<String, dynamic> json) {
+    return FollowerComparisonListResponse(
+      count: json['count'] as int,
+      next: json['next'] as String?,
+      previous: json['previous'] as String?,
+      results:
+          (json['results'] as List)
+              .map((comparison) => FollowerComparison.fromJson(comparison))
+              .toList(),
+    );
   }
 }

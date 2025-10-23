@@ -3,6 +3,9 @@ import 'package:go_router/go_router.dart';
 
 import '../models/post.dart';
 import '../screens/analytics_dashboard_screen.dart';
+import '../screens/followers_analysis_screen.dart';
+import '../screens/followers_screen.dart';
+import '../screens/following_screen.dart';
 import '../screens/login_screen.dart';
 import '../screens/post_detail_screen.dart';
 import '../screens/post_list_screen.dart';
@@ -97,6 +100,27 @@ class AppRouter {
               path: '/analytics',
               name: 'analytics',
               builder: (context, state) => const AnalyticsDashboardScreen(),
+            ),
+
+            // Followers
+            GoRoute(
+              path: '/followers',
+              name: 'followers',
+              builder: (context, state) => const FollowersScreen(),
+            ),
+
+            // Following
+            GoRoute(
+              path: '/following',
+              name: 'following',
+              builder: (context, state) => const FollowingScreen(),
+            ),
+
+            // Followers Analysis
+            GoRoute(
+              path: '/followers-analysis',
+              name: 'followers-analysis',
+              builder: (context, state) => const FollowersAnalysisScreen(),
             ),
           ],
         ),
