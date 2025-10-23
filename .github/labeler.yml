@@ -12,7 +12,7 @@ frontend:
   - pubspec.lock
 
 documentation:
-  - '**/*.md'
+  - "**/*.md"
   - docs/**/*
 
 ci-cd:
@@ -31,17 +31,17 @@ dependencies:
   - pubspec.lock
 
 configuration:
-  - '**/.env*'
-  - '**/config/**/*'
+  - "**/.env*"
+  - "**/config/**/*"
   - settings.py
-  - '**/*.config.js'
+  - "**/*.config.js"
 
 tests:
-  - '**/test/**/*'
-  - '**/tests/**/*'
-  - '**/*_test.dart'
-  - '**/test_*.py'
+  - "**/test/**/*"
+  - "**/tests/**/*"
+  - "**/*_test.dart"
+  - "**/test_*.py"
 
 security:
-  - '**/security/**/*'
-  - '**/auth/**/*'
+  - "**/security/**/*"
+  - "**/auth/**/*"
